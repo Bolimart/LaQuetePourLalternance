@@ -7,16 +7,18 @@ public class Ia
     {
         var rand = new Random();
         var heroClass = (HeroClassesEnum)(rand.Next() % 3);
-        Class = InitiateClass(heroClass);
+        _class = InitiateClass(heroClass);
     }
     
-    private Hero Class;
+    private Hero _class;
+    
+    public Hero Class => _class;
 
     public int DamageTaken; // Pour l'IA Ameliorer
-    private int CurrentHealth => Class.CurrentHp; // Pour l'IA Ameliorer
-    private int MaxHealth => Class.MaxHp; // pour l'IA Ameliorer
+    private int CurrentHealth => _class.CurrentHp; // Pour l'IA Ameliorer
+    private int MaxHealth => _class.MaxHp; // pour l'IA Ameliorer
 
-    public void SetAdversary(Hero adv) => Class.SetAdversary(adv);
+    public void SetAdversary(Hero adv) => _class.SetAdversary(adv);
     
     public void Attack()
     {
@@ -25,14 +27,14 @@ public class Ia
         int rdmNumber = rand.Next() % 3;
         if (rdmNumber == 0)
         {
-            Class.Defend();
+            _class.Defend();
         }else if (rdmNumber == 1)
         {
-            Class.Special();
+            _class.Special();
         }
         else
         {
-            Class.DoDamage(Class.Damage);
+            _class.DoDamage(_class.Damage);
         }
     }
 

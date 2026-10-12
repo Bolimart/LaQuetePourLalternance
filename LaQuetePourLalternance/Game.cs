@@ -54,7 +54,14 @@ public class Game
         bot.Attack();
         display();
     }
-
+    
+    
+    public void display()
+    {
+        Console.WriteLine($"IA [ {player.Class.Name} ] <<PV>> {player.Class.CurrentHp}/{player.Class.MaxHp} | <<AP>> {player.Class.Damage}        -        IA [ {bot.Class.Name} ] <<PV>> {bot.Class.CurrentHp}/{bot.Class.MaxHp} | <<AP>> {bot.Class.Damage}");
+    }
+    
+    
     public void displayResult()
     {
         if (player.Class.CurrentHp > bot.Class.CurrentHp)

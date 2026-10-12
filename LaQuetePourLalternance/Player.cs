@@ -20,37 +20,39 @@ public class Player
             _ => HeroClassesEnum.Custom
         };
         
-        Class = InitiateClass(choice);
+        _class = InitiateClass(choice);
     }
     
-    private Hero Class;
+    private Hero _class;
+
+    public Hero Class => _class;
 
     public int DamageTaken; // Pour l'IA Ameliorer
-    private int CurrentHealth => Class.CurrentHp; // Pour l'IA Ameliorer
-    private int MaxHealth => Class.MaxHp; // pour l'IA Ameliorer
+    private int CurrentHealth => _class.CurrentHp; // Pour l'IA Ameliorer
+    private int MaxHealth => _class.MaxHp; // pour l'IA Ameliorer
 
-    public void SetAdversary(Hero adv) => Class.SetAdversary(adv);
+    public void SetAdversary(Hero adv) => _class.SetAdversary(adv);
     
     public void Attack()
     {
         int choice = 0;
         var s = $"""
-                 1 - Attack : {Class.attackDesc}
-                 2 - Defend : {Class.deffendDesc}
-                 3 - Special : {Class.specialDesc}
+                 1 - Attack : {_class.attackDesc}
+                 2 - Defend : {_class.deffendDesc}
+                 3 - Special : {_class.specialDesc}
                  """;
         choice = int.Parse(Helper.Asking(s, new []{"1", "2", "3"}));
             
         if (choice == 2)
         {
-            Class.Defend();
+            _class.Defend();
         }else if (choice == 3)
         {
-            Class.Special();
+            _class.Special();
         }
         else
         {
-            Class.DoDamage(Class.Damage);
+            _class.DoDamage(_class.Damage);
         }
     }
 
