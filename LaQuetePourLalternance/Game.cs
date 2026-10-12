@@ -25,6 +25,9 @@ public class Game
             player = new Player();
             bot = new(); 
             
+            player.SetAdversary(bot.Class);
+            bot.SetAdversary(player.Class);
+            
             while (!endGame())
             {
                 playerTurn();
@@ -46,11 +49,13 @@ public class Game
     public void playerTurn()
     {
         display();
+        player.Class.StartTurn();
         player.Attack();
     }  
     
     public void botTurn()
     {
+        bot.Class.StartTurn();
         bot.Attack();
         display();
     }

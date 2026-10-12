@@ -1,4 +1,6 @@
-﻿namespace LaQuetePourLalternance;
+﻿using System.Diagnostics;
+
+namespace LaQuetePourLalternance;
 
 public enum HeroClassesEnum
 {
@@ -128,6 +130,9 @@ public class Tank : Hero
         MaxHp = 5;
         CurrentHp = MaxHp;
         Name = "Younes";
+        attackDesc = "*Donne un coup avec son glaive* Prend ça !";
+        deffendDesc = "*Se protège* Je ne faiblirais pas !";
+        specialDesc = "*S'acharne en donnant un coup le blessant légèrement* YAAAAAAAAAHHHHH";
     }
     public override void Special()
     {
@@ -137,7 +142,7 @@ public class Tank : Hero
     {
         if (IsSpecialActive)
         {
-            // faire le calcul de dmg et rajouter le bool isSpecial
+            // TODO faire le calcul de dmg et rajouter le bool isSpecial
         }
         else
         {
