@@ -17,7 +17,8 @@ public class Game
 
     #endregion
     #region - Methods
-    public Game()
+
+    public void StartGame()
     {
         while(true)
         {
@@ -40,7 +41,6 @@ public class Game
             if (restartAnswer == "n")
                 break;
         }
-
     }
 
     public void playerTurn()
@@ -58,7 +58,7 @@ public class Game
     
     public void display()
     {
-        Console.WriteLine($"IA [ {player.Class.Name} ] <<PV>> {player.Class.CurrentHp}/{player.Class.MaxHp} | <<AP>> {player.Class.Damage}        -        IA [ {bot.Class.Name} ] <<PV>> {bot.Class.CurrentHp}/{bot.Class.MaxHp} | <<AP>> {bot.Class.Damage}");
+        Console.WriteLine($"Joueur [ {player.Class.Name} ] <<PV>> {player.Class.CurrentHp}/{player.Class.MaxHp} | <<AP>> {player.Class.Damage}        -        IA [ {bot.Class.Name} ] <<PV>> {bot.Class.CurrentHp}/{bot.Class.MaxHp} | <<AP>> {bot.Class.Damage}");
     }
     
     
