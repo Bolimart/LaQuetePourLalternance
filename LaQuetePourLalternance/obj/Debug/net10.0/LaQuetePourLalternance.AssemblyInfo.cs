@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LaQuetePourLalternance")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d96aed92b604ca6eee3905bf8a412c1ff69437ba")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8dcb93c86efef5dd268e3242c7ad2aeaaa613ba4")]
 [assembly: System.Reflection.AssemblyProductAttribute("LaQuetePourLalternance")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LaQuetePourLalternance")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
