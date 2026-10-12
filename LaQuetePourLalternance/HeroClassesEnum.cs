@@ -136,19 +136,10 @@ public class Tank : Hero
     }
     public override void Special()
     {
-        IsSpecialActive = true;
+        TakeDamage(1, false);
+        Adversary?.TakeDamage(2, true);
     }
-    public override void DoDamage(int damage)
-    {
-        if (IsSpecialActive)
-        {
-            // TODO faire le calcul de dmg et rajouter le bool isSpecial
-        }
-        else
-        {
-            base.DoDamage(damage);
-        }
-    }
+
 }
 
 public class Damager : Hero
