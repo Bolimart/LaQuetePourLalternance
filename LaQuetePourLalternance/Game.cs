@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using System.ComponentModel.Design;
+using System.Formats.Asn1;
 using System.Reflection.Emit;
+using System.Security.Cryptography;
 
 namespace LaQuetePourLalternance;
 
@@ -8,7 +10,8 @@ public class Game
 {
     #region - Fields & Properties
 
-    Hero player;
+    Player player;
+    Ia bot;
 
     
 
@@ -16,58 +19,45 @@ public class Game
     #region - Methods
     public Game()
     {
-        while (!endGame())
+        while(true)
         {
-            playerTurn();
+            player = new Player();
+            bot = new(); 
+            
+            while (!endGame())
+            {
+                playerTurn();
 
-            if (endGame()) break;
+                if (endGame()) break;
 
-            botTurn();
+                botTurn();
+            }
+
+            displayResult();
+
+            string restartAnswer = Helper.Asking("Voulez-vous recommencer la partie ?", new[]{"o", "n"});
+
+            if (restartAnswer == "n")
+                break;
         }
-
-        displayResult();
 
     }
 
     public void playerTurn()
     {
-            string choixAction = ("");
-
-            while (!(choixAction == "a") || !choixAction == "d" || !choixAction == "s")
-            {
-                Console.WriteLine("Au tour du joueur");
-                Console.WriteLine("- Attaquer -a");
-                Console.WriteLine("- Défendre -d");
-                Console.WriteLine("- Attaque spéciale -s");
-
-                choixAction = Console.ReadLine();
-
-                if (!choixAction == "a" || !choixAction == "d" || !choixAction == "s")
-                    Console.WriteLine("Choix invalide");
-
-                else
-                {
-                    
-                    
-                    break;
-                }  
-
-
-            }  
-
-
-
-
-        }  
+        display();
+        player.Attack();
+    }  
     
     public void botTurn()
-        {
-
-        }
+    {
+        bot.Attack();
+        display();
+    }
 
     public void displayResult()
     {
-        Console.WriteLine($"")
+        
 
     }
 

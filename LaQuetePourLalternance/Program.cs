@@ -19,6 +19,7 @@ static class Helper
         string answer = "";
         //
         bool valid = false;
+        
         while (!valid){
             Console.WriteLine(question);
             //Si on note rien en readline c'est possible que ça renvoie une erreur donc pour s'assurer que tout se passe bien
@@ -39,4 +40,5 @@ static class Helper
         }
         return answer;
     }
+    
 }
