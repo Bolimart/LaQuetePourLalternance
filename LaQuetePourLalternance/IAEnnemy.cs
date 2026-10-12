@@ -61,16 +61,16 @@ public class IAEnnemy
         switch (heroChoice)
         {
             case HeroClassesEnum.Damager :
-                return new Damager();
+                return new Damager(this);
                 break;
             case HeroClassesEnum.Healer :
-                return new Healer();
+                return new Healer(this);
                 break;
             case HeroClassesEnum.Tank :
-                return new Tank();
+                return new Tank(this);
                 break;
             default:
-                return new Damager();
+                return new Damager(this);
         } 
     }
 }
