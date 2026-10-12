@@ -7,6 +7,11 @@ public enum HeroClassesEnum
 
 public abstract class Hero
 {
+    protected Hero(IAEnnemy ia)
+    {
+        IA = ia;
+    }
+    
     public HeroClassesEnum Classe;
 
     public IAEnnemy IA;
@@ -19,7 +24,9 @@ public abstract class Hero
     
     public bool IsSpecialActive;
 
-    public string Name;
+    public string Name = "";
+
+    
 
     public virtual void StartOfTurn()
     {
@@ -54,7 +61,7 @@ public abstract class Hero
 
     public virtual void DoDamage(int damage)
     {
-        // à faire aussi
+        IA.TakeDamage(damage, false);
     }
     
     
@@ -75,10 +82,9 @@ public abstract class Hero
     
 }
 
-
 public class Healer : Hero
 {
-    public Healer()
+    public Healer(IAEnnemy ia) : base(ia)
     {
         Classe = HeroClassesEnum.Healer;
         Damage = 1;
@@ -100,7 +106,7 @@ public class Healer : Hero
 
 public class Tank : Hero
 {
-    public Tank()
+    public Tank(IAEnnemy ia) : base(ia)
     {
         Classe = HeroClassesEnum.Tank;
         Damage = 1;
@@ -127,7 +133,7 @@ public class Tank : Hero
 
 public class Damager : Hero
 {
-    public Damager()
+    public Damager(IAEnnemy ia) : base(ia)
     {
         Classe = HeroClassesEnum.Damager;
         Damage = 2;
