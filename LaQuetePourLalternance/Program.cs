@@ -6,7 +6,7 @@ internal class Program
     {
         void Main(string[] args)
         {
-            
+            Game game = new();
         }
     }
 }
