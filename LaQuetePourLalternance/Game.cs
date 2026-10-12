@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.ComponentModel.Design;
 using System.Reflection.Emit;
 
 namespace LaQuetePourLalternance;
@@ -26,15 +27,37 @@ public class Game
 
         displayResult();
 
-    
-
-
-
     }
 
     public void playerTurn()
         {
-            
+            string choixAction = ("");
+
+            while (!choixAction == "a" || !choixAction == "d" || !choixAction == "s")
+            {
+                Console.WriteLine("Au tour du joueur");
+                Console.WriteLine("- Attaquer -a");
+                Console.WriteLine("- Défendre -d");
+                Console.WriteLine("- Attaque spéciale -s");
+
+                choixAction = Console.ReadLine()
+
+                if (!choixAction == "a" || !choixAction == "d" || !choixAction == "s")
+                    Console.WriteLine("Choix invalide");
+
+                else
+                {
+                    
+                    
+                    break;
+                }  
+
+
+            }  
+
+
+
+
         }  
     
     public void botTurn()
