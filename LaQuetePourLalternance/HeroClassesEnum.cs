@@ -12,6 +12,7 @@ public abstract class Hero
         IA = ia;
     }
     
+    
     public HeroClassesEnum Classe;
 
     public Ia? IA;
@@ -27,6 +28,9 @@ public abstract class Hero
     public bool IsSpecialActive;
 
     public string Name = "";
+    public string attackDesc = "";
+    public string deffendDesc = "";
+    public string specialDesc = "";
     
     public virtual void StartTurn()
     {
@@ -99,6 +103,9 @@ public class Healer : Hero
         MaxHp = 4;
         CurrentHp = MaxHp;
         Name = "Nathan";
+        attackDesc = "Bitch slap.";
+        deffendDesc = "Il prend sa pause matcha, ne le dérangez pas";
+        specialDesc = "Miku miku beam (nom très à côté de la plaque).";
     }
 
     public override void Special()
@@ -148,6 +155,9 @@ public class Damager : Hero
         MaxHp = 3;
         CurrentHp = MaxHp;
         Name = "Vincent";
+        attackDesc = "Donne un coup d'épée, c'est plutôt OK.";
+        deffendDesc = "Il se défend, euh, c'est pas mal.";
+        specialDesc = "Réfléchie l'attaque ennemie mais prend quand même les dégâts.";
     }
     
     public override void Special()
@@ -162,5 +172,38 @@ public class Damager : Hero
         {
             DoDamage(damage);
         }
+    }
+}
+
+public class Custom : Hero
+{
+    public Custom(Ia? ia = null) : base(ia)
+    {
+        Classe = HeroClassesEnum.Custom;
+        Damage = 0;
+        MaxHp = 5;
+        CurrentHp = MaxHp;
+        Name = "Julien";
+        attackDesc = $"Il attaque là ou sa fait mal, dans le porte monnaie. Son attaque retombe à 0.";
+        deffendDesc = "Il se défend, il protège surtout son contrat.";
+        specialDesc = "Il ce tue à la tache pour obtenir son salaire. Il gagne un point d'attaque et est vulnérable pour un tour.";
+    }
+    
+    public override void Special()
+    {
+        IsSpecialActive = true;
+        Damage++;
+    }
+
+    public override void TakeDamage(int damage, bool isSpecial)
+    {
+        if (IsSpecialActive) base.TakeDamage(damage + 1, false);
+        else base.TakeDamage(damage, isSpecial);
+    }
+
+    public override void DoDamage(int damage)
+    {
+        base.DoDamage(damage);
+        Damage = 0;
     }
 }

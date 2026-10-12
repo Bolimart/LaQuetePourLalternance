@@ -12,9 +12,9 @@ internal class Program
 }
 
 
-class Helper
+static class Helper 
 {
-    public string asking(string question, string?[] answers = null)
+    public static string Asking(string question, string?[] answers = null)
     {
         string answer = "";
         //

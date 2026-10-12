@@ -30,17 +30,17 @@ public class Game
     }
 
     public void playerTurn()
-        {
+    {
             string choixAction = ("");
 
-            while (!choixAction == "a" || !choixAction == "d" || !choixAction == "s")
+            while (!(choixAction == "a") || !choixAction == "d" || !choixAction == "s")
             {
                 Console.WriteLine("Au tour du joueur");
                 Console.WriteLine("- Attaquer -a");
                 Console.WriteLine("- Défendre -d");
                 Console.WriteLine("- Attaque spéciale -s");
 
-                choixAction = Console.ReadLine()
+                choixAction = Console.ReadLine();
 
                 if (!choixAction == "a" || !choixAction == "d" || !choixAction == "s")
                     Console.WriteLine("Choix invalide");
