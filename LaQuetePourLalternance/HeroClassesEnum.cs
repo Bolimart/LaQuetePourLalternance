@@ -7,14 +7,16 @@ public enum HeroClassesEnum
 
 public abstract class Hero
 {
-    protected Hero(IAEnnemy ia)
+    protected Hero(Ia? ia = null)
     {
         IA = ia;
     }
     
     public HeroClassesEnum Classe;
 
-    public IAEnnemy IA;
+    public Ia? IA;
+
+    public Hero? Adversary;
     
     public int CurrentHp;
     public int MaxHp;
@@ -25,10 +27,8 @@ public abstract class Hero
     public bool IsSpecialActive;
 
     public string Name = "";
-
     
-
-    public virtual void StartOfTurn()
+    public virtual void StartTurn()
     {
         IsSpecialActive = false;
         IsDefending = false;
@@ -36,22 +36,27 @@ public abstract class Hero
     
     public virtual void TakeDamage(int damage, bool isSpecial)
     {
+        int dmgTaken = 0;
         if (IsDefending)
         {
-            if (isSpecial == true)
+            if (isSpecial)
             {
-                CurrentHp -= 1;
+                dmgTaken = 1;
             }
             else
             {
-                return;
+                dmgTaken =  0;
             }
         }
         else
         {
-            CurrentHp -= damage;
+            dmgTaken = damage;
         }
-        
+
+        if (IA != null) IA.DamageTaken = dmgTaken;
+
+        CurrentHp -= dmgTaken;
+
         if (CurrentHp < 0)
         {
             CurrentHp = 0;
@@ -61,14 +66,12 @@ public abstract class Hero
 
     public virtual void DoDamage(int damage)
     {
-        IA.TakeDamage(damage, false);
+        Adversary?.TakeDamage(damage, false);
     }
     
     
     public virtual void Special()
-    {
-        // normal que ça soit vide
-    }
+    {}
 
     public void Defend()
     {
@@ -79,12 +82,17 @@ public abstract class Hero
     {
         // à voir avec le game manager
     }
+
+    public void SetAdversary(Hero adv)
+    {
+        Adversary ??= adv;
+    }
     
 }
 
 public class Healer : Hero
 {
-    public Healer(IAEnnemy ia) : base(ia)
+    public Healer(Ia? ia = null) : base(ia)
     {
         Classe = HeroClassesEnum.Healer;
         Damage = 1;
@@ -106,7 +114,7 @@ public class Healer : Hero
 
 public class Tank : Hero
 {
-    public Tank(IAEnnemy ia) : base(ia)
+    public Tank(Ia? ia = null) : base(ia)
     {
         Classe = HeroClassesEnum.Tank;
         Damage = 1;
@@ -133,7 +141,7 @@ public class Tank : Hero
 
 public class Damager : Hero
 {
-    public Damager(IAEnnemy ia) : base(ia)
+    public Damager(Ia? ia = null) : base(ia)
     {
         Classe = HeroClassesEnum.Damager;
         Damage = 2;
