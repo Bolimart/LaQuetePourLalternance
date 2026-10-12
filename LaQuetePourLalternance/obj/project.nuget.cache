@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "rn269AZdDBU=",
+  "dgSpecHash": "Ozf10xMMvcM=",
   "success": true,
-  "projectFilePath": "C:\\Users\\azdel\\Documents\\GitHub\\LaQuetePourLalternance\\LaQuetePourLalternance\\LaQuetePourLalternance.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "/home/bolimart/RiderProjects/LaQuetePourLalternance/LaQuetePourLalternance/LaQuetePourLalternance.csproj",
+  "expectedPackageFiles": [
+    "/home/bolimart/.nuget/packages/microsoft.aspnetcore.app.ref/10.0.12/microsoft.aspnetcore.app.ref.10.0.12.nupkg.sha512"
+  ],
   "logs": []
 }
