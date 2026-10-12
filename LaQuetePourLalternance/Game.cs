@@ -13,34 +13,46 @@ public class Game
 
     #endregion
     #region - Methods
-    void Game()
+    public Game()
     {
-        while (endGame = false)
+        while (!endGame())
+        {
+            playerTurn();
 
+            if (endGame()) break;
+
+            botTurn();
+        }
+
+        displayResult();
+
+    
 
 
 
     }
 
-    public playerTurn()
+    public void playerTurn()
         {
             
         }  
     
-    public botTurn()
+    public void botTurn()
         {
 
         }
 
-    public displayResult()
+    public void displayResult()
     {
+        Console.WriteLine($"")
 
     }
 
-    public endGame()
+    public bool endGame()
     {
-
+        
+        
+        return false;
     }
-
     #endregion
 }
