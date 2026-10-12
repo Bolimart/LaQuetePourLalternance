@@ -57,15 +57,15 @@ public class Game
 
     public void displayResult()
     {
-        
-
+        if (player.Class.CurrentHp > bot.Class.CurrentHp)
+            Console.WriteLine("Bravo ! Vous avez gagné !"); 
+        else
+            Console.WriteLine("Boouuuh vous avez perdu !"); 
     }
 
     public bool endGame()
     {
-        
-        
-        return false;
+        return player.Class.CurrentHp <= 0 || bot.Class.CurrentHp <= 0;
     }
     #endregion
 }

@@ -186,7 +186,7 @@ public class Custom : Hero
         Name = "Julien";
         attackDesc = $"Il attaque là ou sa fait mal, dans le porte monnaie. Son attaque retombe à 0.";
         deffendDesc = "Il se défend, il protège surtout son contrat.";
-        specialDesc = "Il ce tue à la tache pour obtenir son salaire. Il gagne un point d'attaque et est vulnérable pour un tour.";
+        specialDesc = "Il se tue à la tache pour obtenir son salaire. Il gagne un point d'attaque et est vulnérable pour un tour.";
     }
     
     public override void Special()
