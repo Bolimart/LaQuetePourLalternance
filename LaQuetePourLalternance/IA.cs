@@ -5,7 +5,7 @@ public class Ia
 {
     public Ia()
     {
-        var rand = Helper.Rand;
+        var rand = GameEnvironement.Rand;
         var heroClass = (HeroClassesEnum)(rand.Next() % 3);
         _class = InitiateClass(heroClass);
     }
@@ -22,7 +22,7 @@ public class Ia
     
     public void Attack()
     {
-        var rand = Helper.Rand;
+        var rand = GameEnvironement.Rand;
         //TODO : Faire soit en sorte que le Bot commence en premier, soit que le text ce montre apres l'action
         // Car actuellement on peut voir ce que le bot fait a l'avance
         int rdmNumber = rand.Next() % 3;

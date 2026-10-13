@@ -115,11 +115,8 @@ public class Healer : Hero
         Console.WriteLine("Yithash se régénère! Il gagne 2 PV !");
         CurrentHp += 2;
         if (CurrentHp > MaxHp)
-        {
             CurrentHp = MaxHp;
-        }
     }
-    
 }
 
 public class Tank : Hero
