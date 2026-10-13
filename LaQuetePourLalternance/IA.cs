@@ -28,7 +28,7 @@ public class Ia
         int rdmNumber = rand.Next() % 3;
         if (rdmNumber == 0)
         {
-            Console.WriteLine($"{Class.Name} décide de ce défendre face au danger !");
+            Console.WriteLine($"{Class.Name} décide de se défendre face au danger !");
             _class.Defend();
         }else if (rdmNumber == 1)
         {
@@ -37,7 +37,7 @@ public class Ia
         }
         else
         {
-            Console.WriteLine($"{Class.Name} décide de ce battre avec tout le peu de force qu'un robot peu avoir.");
+            Console.WriteLine($"{Class.Name} décide de se battre avec tout le peu de force qu'un robot peu avoir.");
             _class.DoDamage(_class.Damage);
         }
     }
