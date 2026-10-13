@@ -1,4 +1,4 @@
-namespace Photon;
+namespace LaQuetePourLalternance.Graphics2dApi;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
@@ -9,6 +9,7 @@ public class Shader : IDisposable
 
     private int _handle; // Since shaders are GPU objects, they're represented by an integer (handle)
     private bool _disposedValue = false;
+    private int _references; // Count the number of squares that reference this shader
 
     public int Handle { get => _handle; }
 
@@ -122,17 +123,19 @@ public class Shader : IDisposable
     
     #endregion
     #region - IDisposale Handling
+
+    public void AddReference() => _references++;
     
     /// <summary>
     /// The function that allows the IDisposable interface to work.
-    /// It deletes the texture from the VRAM.
+    /// It deletes the shader program from the VRAM.
     /// </summary>
     /// <param name="disposing">If the object is already being disposed</param>
     protected virtual void Dispose(bool disposing) // protected function that delete the shader from VRAM to prevent leaking
     {
         if (!_disposedValue)
         {
-            GL.DeleteTexture(_handle);
+            GL.DeleteProgram(_handle);
             _disposedValue = true;
         }
     }
@@ -149,13 +152,18 @@ public class Shader : IDisposable
     }
     
     /// <summary>
-    /// The function to call to dispose of the texture
+    /// The function to call to dispose of the shader. It will get disposed only if every reference of this
+    /// shader is being disposed.
     /// Is mandatory to call when you end the program to not have any GPU resource leak.
     /// </summary>
     public void Dispose()
     {
-        Dispose(true);
-        GC.SuppressFinalize(this);
+        _references--;
+        if (_references <= 0)
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
     #endregion
 }

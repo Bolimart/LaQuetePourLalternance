@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using OpenTK.Mathematics;
-using Photon;
+using LaQuetePourLalternance.Graphics2dApi;
 
-namespace Photon;
+namespace LaQuetePourLalternance.Graphics2dApi;
 
 public struct SquareData
 {
@@ -19,6 +19,14 @@ public struct SquareData
         Rotation = rotation;
         Texture = texture;
         Shader = shader;
+        shader.AddReference();
+        texture.AddReference();
+    }
+
+    public void ScaleAccordingToTex(float scale = 1)
+    {
+        Scale.X = Texture.Dimension.X * scale;
+        Scale.Y = Texture.Dimension.Y * scale;
     }
     
     public void Use()
@@ -43,10 +51,18 @@ public class Square
 {
     public SquareData Data;
     public Stopwatch Time = new();
+
+    public float DepthZ
+    {
+        get => Data.Position.Z;
+        set => Data.Position.Z = value;
+    }
     
-    public Square(SquareData data)
+    public Square(SquareData data, float depthZ = 0f)
     {
         Data = data;
+        DepthZ = depthZ;
+        Data.ScaleAccordingToTex(0.3f);
     }
     
     /// <summary>
@@ -60,15 +76,30 @@ public class Square
     /// <summary>
     /// Called on every render call.
     /// </summary>
-    public virtual void Use(float dtime)
+    public virtual void Use(float dtime, Matrix4 projection)
     {
         Data.Use();
-
+        
+        Matrix4 model = GetModelMatrix();
+            
+        // adding a projection matrix allow for a better world placement not in the clip space
+        Data.Shader.SetMatrix4("projection", projection); // Now with proper projection !
+        Data.Shader.SetMatrix4("model", model);
+        
         Data.Rotation += 1f * dtime;
+    }
+    
+    public void Unload()
+    {
+        Data.Shader.Dispose();
+        Data.Texture.Dispose();
     }
     
     // Scale -> Rotation -> Translation
     public Matrix4 GetModelMatrix() => Matrix4.CreateScale(Data.Scale)
                                        * Matrix4.CreateFromAxisAngle(Vector3.UnitZ, Data.Rotation)
                                        * Matrix4.CreateTranslation(Data.Position);
+    
+    // Unload the texture and the shader when a square is'nt used anymore.
+    ~Square() => Unload();
 }

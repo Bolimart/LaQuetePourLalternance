@@ -1,4 +1,6 @@
-namespace Photon;
+using OpenTK.Mathematics;
+
+namespace LaQuetePourLalternance.Graphics2dApi;
 using System;
 using OpenTK.Graphics.OpenGL4;
 using StbImageSharp;
@@ -7,8 +9,10 @@ public class Texture : IDisposable
 {
     #region - Fields & Propreties
     
-    public int Handle;
-    private bool _disposedValue = false;
+    public int Handle = 0;
+    private bool _disposedValue;
+    private int _references; // Count the number of squares that reference this texture
+    public Vector2i Dimension;
     
     #endregion
     #region - Constructors
@@ -24,6 +28,7 @@ public class Texture : IDisposable
         // Load the image
         string path = Path.Combine(AppContext.BaseDirectory, "Asset", "Texture", fileName);
         ImageResult image = ImageResult.FromStream(File.OpenRead(path), ColorComponents.RedGreenBlueAlpha);
+        Dimension = new Vector2i(image.Width, image.Height);
         GL.BindTexture(TextureTarget.Texture2D, Handle);
         
         // Upload the texture to the GPU
@@ -49,16 +54,18 @@ public class Texture : IDisposable
     #endregion
     #region - IDisposable Handling
     
+    public void AddReference() => _references++;
+    
     /// <summary>
     /// The function that allows the IDisposable interface to work.
-    /// It deletes the shader program from the VRAM.
+    /// It deletes the texture from the VRAM.
     /// </summary>
     /// <param name="disposing">If the object is already being disposed</param>
     protected virtual void Dispose(bool disposing) // protected function that delete the shader from VRAM to prevent leaking
     {
         if (!_disposedValue)
         {
-            GL.DeleteProgram(Handle);
+            GL.DeleteTexture(Handle);
             _disposedValue = true;
         }
     }
@@ -75,13 +82,18 @@ public class Texture : IDisposable
     }
     
     /// <summary>
-    /// The function to call to dispose of the shader
+    /// The function to call to dispose of the texture. It will get disposed only if every reference of this
+    /// shader is being disposed.
     /// Is mandatory to call when you end the program to not have any GPU resource leak.
     /// </summary>
     public void Dispose()
     {
-        Dispose(true);
-        GC.SuppressFinalize(this);
+        _references--;
+        if (_references <= 0)
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
     #endregion
 }

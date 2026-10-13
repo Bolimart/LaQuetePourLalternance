@@ -8,3 +8,6 @@ Younes : j'ai fait les classes des différents héros, je n'ai eu qu'un soucis l
 Prendre du recul nous a permit de mieux résourdre le soucis.
 
 ## - Jour 2 | Assemblement, refactoring et documentation
+
+
+On a failli partir sur du multithreading
