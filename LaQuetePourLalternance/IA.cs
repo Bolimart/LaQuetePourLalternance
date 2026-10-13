@@ -22,24 +22,45 @@ public class Ia
     
     public HeroAction Attack()
     {
-        var rand = Helper.Rand;
-        //TODO : Faire soit en sorte que le Bot commence en premier, soit que le text ce montre apres l'action
-        // Car actuellement on peut voir ce que le bot fait a l'avance
+        switch (_class.Classe)
+        {
+            case HeroClassesEnum.Healer :
+                return HealersAI();
+            case HeroClassesEnum.Damager :
+                return DamagerAI();
+            case HeroClassesEnum.Tank :
+                return TankAI();
+            default:
+                return CustomAI();
+        }
+    }
 
+    private HeroAction HealersAI()
+    {
         Action action;
-        int order = 0;
-
-        int rdmNumber = rand.Next() % 3;
-        if (rdmNumber == 0)
+        int order;
+        if (_class.CurrentHp <= 2)
         {
-            //Console.WriteLine($"{Class.Name} décide de se défendre face au danger !");
-            action = _class.Defend;
-            order = 4;
-        }else if (rdmNumber == 1)
-        {
-            //Console.WriteLine($"{Class.Name} utilise son abilité spéciale !");
-            action = _class.Special;
-            order = _class.SpecialOrder;
+            if (_class.Adversary?.CurrentHp <= 2)
+            {
+                int rdm = Helper.Rand.Next() % 10;
+                if (rdm < 3)
+                {
+                    action = _class.Special;
+                    order = _class.SpecialOrder;
+                }else
+                {
+                    action = () => { 
+                        _class.DoDamage(_class.Damage);
+                    };
+                    order = 5;
+                }
+            }
+            else
+            {
+                action = _class.Special;
+                order = _class.SpecialOrder;
+            }
         }
         else
         {
@@ -48,7 +69,113 @@ public class Ia
             };
             order = 5;
         }
+        return new HeroAction(action, order);
+    }
 
+    private HeroAction DamagerAI()
+    {
+        Action action;
+        int order;
+        if (_class.CurrentHp >= _class.Adversary?.Damage)
+        {
+            action = _class.Special;
+            order = _class.SpecialOrder;
+        }
+        else
+        {
+            int rdm = Helper.Rand.Next() % 10;
+            if (rdm <= 6)
+            {
+                action = _class.Defend;
+                order = 4;
+            }
+            else
+            {
+                action = () => { 
+                    _class.DoDamage(_class.Damage);
+                };
+                order = 5;
+            }
+        }
+       
+        return new HeroAction(action, order);
+    }
+
+    private HeroAction TankAI()
+    {
+        Action action;
+        int order;
+        if (_class.Adversary?.CurrentHp == 1 && _class.CurrentHp != 1)
+        {
+            action = _class.Special;
+            order = _class.SpecialOrder;
+        }else if (_class.CurrentHp > 2)
+        {
+            action = _class.Special;
+            order = _class.SpecialOrder;
+        }
+        else
+        {
+            int rdm = Helper.Rand.Next() % 10;
+            if (rdm < 5)
+            {
+                action = _class.Defend;
+                order = 4;
+            }
+            else
+            {
+                action = () => { 
+                    _class.DoDamage(_class.Damage);
+                };
+                order = 5;
+            }
+        }
+        return new HeroAction(action, order);
+    }
+
+    private HeroAction CustomAI()
+    {
+        Action action;
+        int order;
+        if (_class.Damage == 0)
+        {
+            action = _class.Special;
+            order = _class.SpecialOrder;
+        }else if (_class.CurrentHp > 2)
+        {
+            int rdm = Helper.Rand.Next() % 10;
+            if (rdm < 7)
+            {
+                action = _class.Defend;
+                order = 4;
+            }
+            else
+            {
+                action = _class.Special;
+                order = _class.SpecialOrder;
+            }
+        }
+        else
+        {
+            int rdm = Helper.Rand.Next() % 10;
+            if (rdm == 1)
+            {
+                action = _class.Special;
+                order = _class.SpecialOrder;
+            }else if (rdm < 4)
+            {
+                action = _class.Defend;
+                order = 4;
+            }
+            else
+            {
+                action = () => { 
+                    _class.DoDamage(_class.Damage);
+                };
+                order = 5;
+            }
+            
+        }
         return new HeroAction(action, order);
     }
 
