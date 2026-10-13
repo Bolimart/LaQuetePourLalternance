@@ -66,29 +66,27 @@ public abstract class Hero
         if (CurrentHp < 0)
         {
             CurrentHp = 0;
-            Death();
         }
     }
 
     public virtual void DoDamage(int damage)
     {
+        Console.WriteLine(Name + " fait " + damage + " dégâts à son adversaire");
         Adversary?.TakeDamage(damage, false);
     }
-    
-    
+
+
     public virtual void Special()
-    {}
+    {
+        Console.WriteLine(Name + " utilise son attaque spéciale!");
+    }
 
     public void Defend()
     {
+        Console.WriteLine(Name + " se défend!");
         IsDefending = true;
     }
     
-    public void Death()
-    {
-        // à voir avec le game manager
-    }
-
     public void SetAdversary(Hero adv)
     {
         Adversary ??= adv;
@@ -112,6 +110,8 @@ public class Healer : Hero
 
     public override void Special()
     {
+        base.Special();
+        Console.WriteLine("Nathan se régénère!");
         CurrentHp += 2;
         if (CurrentHp > MaxHp)
         {
@@ -130,12 +130,14 @@ public class Tank : Hero
         MaxHp = 5;
         CurrentHp = MaxHp;
         Name = "Younes";
-        attackDesc = "*Donne un coup avec son glaive* Prend ça !";
-        deffendDesc = "*Se protège* Je ne faiblirais pas !";
+        attackDesc = "*Donne un coup avec son gourdin* TIEN";
+        deffendDesc = "*Se bave dessus en se protegeant avec ses bras* gnehhhhh";
         specialDesc = "*S'acharne en donnant un coup le blessant légèrement* YAAAAAAAAAHHHHH";
     }
     public override void Special()
     {
+        Console.WriteLine("Younes lance une attaque imparable!");
+        base.Special();
         TakeDamage(1, false);
         Adversary?.TakeDamage(2, true);
     }
@@ -158,12 +160,15 @@ public class Damager : Hero
     
     public override void Special()
     {
+        base.Special();
+        Console.WriteLine("Vincent renverra les prochains coups!");
         IsSpecialActive = true;
     }
 
     public override void TakeDamage(int damage, bool isSpecial)
     {
         base.TakeDamage(damage, isSpecial);
+        Console.WriteLine("Vincent renvoie une partie des dégats");
         if (IsSpecialActive)
         {
             DoDamage(damage);
@@ -187,6 +192,7 @@ public class Custom : Hero
     
     public override void Special()
     {
+        Console.WriteLine("Julien augmente ses dégâts pour le tour mais est vulnérable!");
         IsSpecialActive = true;
         Damage++;
     }
