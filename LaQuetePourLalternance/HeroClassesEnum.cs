@@ -71,14 +71,15 @@ public abstract class Hero
 
     public virtual void DoDamage(int damage)
     {
-        Console.WriteLine(Name + " fait " + damage + " dégâts à son adversaire");
+        Console.WriteLine(Name + " fait " + damage + " dégâts à son adversaire.");
+        if (Adversary?.IsDefending ?? false) Console.WriteLine("Mais l'adversaire ce défend et ne prend pas de dégâts.");
         Adversary?.TakeDamage(damage, false);
     }
 
 
     public virtual void Special()
     {
-        Console.WriteLine(Name + " utilise son attaque spéciale!");
+        
     }
 
     public void Defend()
@@ -102,7 +103,7 @@ public class Healer : Hero
         Damage = 1;
         MaxHp = 4;
         CurrentHp = MaxHp;
-        Name = "Nathan";
+        Name = "Yithash";
         attackDesc = "Bitch slap.";
         deffendDesc = "Il prend sa pause matcha, ne le dérangez pas";
         specialDesc = "Miku miku beam (nom très à côté de la plaque).";
@@ -111,7 +112,7 @@ public class Healer : Hero
     public override void Special()
     {
         base.Special();
-        Console.WriteLine("Nathan se régénère!");
+        Console.WriteLine("Yithash se régénère! Il gagne de PV !");
         CurrentHp += 2;
         if (CurrentHp > MaxHp)
         {
@@ -129,14 +130,14 @@ public class Tank : Hero
         Damage = 1;
         MaxHp = 5;
         CurrentHp = MaxHp;
-        Name = "Younes";
+        Name = "Azdelux";
         attackDesc = "*Donne un coup avec son gourdin* TIEN";
         deffendDesc = "*Se bave dessus en se protegeant avec ses bras* gnehhhhh";
         specialDesc = "*S'acharne en donnant un coup le blessant légèrement* YAAAAAAAAAHHHHH";
     }
     public override void Special()
     {
-        Console.WriteLine("Younes lance une attaque imparable!");
+        Console.WriteLine("Azdelux lance une attaque imparable! Il pert 1PV mais fait 2 dégâts.");
         base.Special();
         TakeDamage(1, false);
         Adversary?.TakeDamage(2, true);
@@ -152,7 +153,7 @@ public class Damager : Hero
         Damage = 2;
         MaxHp = 3;
         CurrentHp = MaxHp;
-        Name = "Vincent";
+        Name = "Folet";
         attackDesc = "Donne un coup d'épée, c'est plutôt OK.";
         deffendDesc = "Il se défend, euh, c'est pas mal.";
         specialDesc = "Réfléchie l'attaque ennemie mais prend quand même les dégâts.";
@@ -161,14 +162,14 @@ public class Damager : Hero
     public override void Special()
     {
         base.Special();
-        Console.WriteLine("Vincent renverra les prochains coups!");
+        Console.WriteLine("Folet renverra les prochains coups! (Mais les recevra quand même parce-qu'il est pas super doué).");
         IsSpecialActive = true;
     }
 
     public override void TakeDamage(int damage, bool isSpecial)
     {
         base.TakeDamage(damage, isSpecial);
-        Console.WriteLine("Vincent renvoie une partie des dégats");
+        Console.WriteLine("Folet renvoie les dégâts. Mais ce fait quand même bléssé.");
         if (IsSpecialActive)
         {
             DoDamage(damage);
@@ -184,22 +185,26 @@ public class Custom : Hero
         Damage = 0;
         MaxHp = 5;
         CurrentHp = MaxHp;
-        Name = "Julien";
-        attackDesc = $"Il attaque là ou sa fait mal, dans le porte monnaie. Son attaque retombe à 0.";
+        Name = "Bolimart";
+        attackDesc = "Il attaque là ou sa fait mal, dans le porte monnaie. Son attaque retombe à 0.";
         deffendDesc = "Il se défend, il protège surtout son contrat.";
         specialDesc = "Il se tue à la tache pour obtenir son salaire. Il gagne un point d'attaque et est vulnérable pour un tour.";
     }
     
     public override void Special()
     {
-        Console.WriteLine("Julien augmente ses dégâts pour le tour mais est vulnérable!");
+        Console.WriteLine("Bolimart augmente ses dégâts pour le tour mais est vulnérable!");
         IsSpecialActive = true;
         Damage++;
     }
 
     public override void TakeDamage(int damage, bool isSpecial)
     {
-        if (IsSpecialActive) base.TakeDamage(damage + 1, false);
+        if (IsSpecialActive)
+        {
+            Console.WriteLine("Bolimart était vulnérable ce tour çi: il prend un dégât en plus");
+            base.TakeDamage(damage + 1, false);
+        }
         else base.TakeDamage(damage, isSpecial);
     }
 

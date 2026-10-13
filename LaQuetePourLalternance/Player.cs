@@ -11,13 +11,13 @@ public class Player
                     3 - Yithash (Healer) : « Venu soigner votre petit cœur de fragile » -Jacky Prieur.
                     4 - Bolimart (Alternant) : Le vilain de l'histoire, il a juste eu son alternance.
                    """;
-        var classId = int.Parse(Helper.Asking(s, new []{"1", "2", "3", "4"}));
+        var classId = Helper.Asking(s, new []{"1", "2", "3", "4"});
         var choice = classId switch
         {
-            1 => HeroClassesEnum.Tank,
-            2 => HeroClassesEnum.Damager,
-            3 => HeroClassesEnum.Healer,
-            _ => HeroClassesEnum.Custom
+            "1" => HeroClassesEnum.Tank,
+            "2" => HeroClassesEnum.Damager,
+            "3" => HeroClassesEnum.Healer,
+            _ => HeroClassesEnum.Custom,
         };
         
         _class = InitiateClass(choice);
@@ -62,15 +62,14 @@ public class Player
         {
             case HeroClassesEnum.Damager :
                 return new Damager();
-                break;
             case HeroClassesEnum.Healer :
                 return new Healer();
-                break;
             case HeroClassesEnum.Tank :
                 return new Tank();
-                break;
+            case HeroClassesEnum.Custom:
+                return new Custom();
             default:
-                return new Damager();
+                return new Custom();
         } 
     }
 }

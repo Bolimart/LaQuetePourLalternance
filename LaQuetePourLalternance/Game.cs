@@ -39,7 +39,7 @@ public class Game
 
             displayResult();
 
-            string restartAnswer = Helper.Asking("Voulez-vous recommencer la partie ?", new[]{"o", "n"});
+            string restartAnswer = Helper.Asking("Voulez-vous recommencer la partie ? \n-o OUI\n-n NON", new[]{"o", "n"});
 
             if (restartAnswer == "n")
                 break;
@@ -48,6 +48,7 @@ public class Game
 
     public void playerTurn()
     {
+        Console.WriteLine("[ TOUR DU JOUEUR ]");
         display();
         player.Class.StartTurn();
         player.Attack();
@@ -55,9 +56,10 @@ public class Game
     
     public void botTurn()
     {
+        Console.WriteLine("[ TOUR DE L'IA ]");
+        display();
         bot.Class.StartTurn();
         bot.Attack();
-        display();
     }
     
     
