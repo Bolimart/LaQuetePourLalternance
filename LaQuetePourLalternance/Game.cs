@@ -27,17 +27,33 @@ public class Game
             
             player.SetAdversary(bot.Class);
             bot.SetAdversary(player.Class);
+            HeroAction actionJoueur;
+            HeroAction actionBot;
+
             
-            while (!endGame())
+            while (!EndGame())
             {
-                playerTurn();
-
-                if (endGame()) break;
-
-                botTurn();
+                actionJoueur = PlayerTurn();
+                actionBot = BotTurn();
+                
+                Console.WriteLine("-----------------------------------------------------");
+                if (actionJoueur.order <= actionBot.order)
+                {
+                    actionJoueur.action.Invoke();
+                    Console.WriteLine();
+                    actionBot.action.Invoke();
+                }
+                else
+                {
+                    actionBot.action.Invoke();
+                    Console.WriteLine();
+                    actionJoueur.action.Invoke();
+                }
+                Console.WriteLine("-----------------------------------------------------");
+                
             }
 
-            displayResult();
+            DisplayResult();
 
             string restartAnswer = Helper.Asking("Voulez-vous recommencer la partie ? \n-o OUI\n-n NON", new[]{"o", "n"});
 
@@ -46,32 +62,31 @@ public class Game
         }
     }
 
-    public void playerTurn()
+    public HeroAction PlayerTurn()
     {
         Console.WriteLine("[ TOUR DU JOUEUR ]");
-        display();
+        Display();
         player.Class.StartTurn();
-        player.Attack();
-        Console.ReadLine();
+        return player.Attack();
+        //Console.ReadLine();
     }  
     
-    public void botTurn()
+    public HeroAction BotTurn()
     {
         Console.WriteLine("[ TOUR DE L'IA ]");
-        display();
+        Display();
         bot.Class.StartTurn();
-        bot.Attack();
-        Console.ReadLine();
+        return bot.Attack();
+        //Console.ReadLine();
     }
     
     
-    public void display()
+    public void Display()
     {
         Console.WriteLine($"Joueur [ {player.Class.Name} ] <<PV>> {player.Class.CurrentHp}/{player.Class.MaxHp} | <<AP>> {player.Class.Damage}        -        IA [ {bot.Class.Name} ] <<PV>> {bot.Class.CurrentHp}/{bot.Class.MaxHp} | <<AP>> {bot.Class.Damage}");
     }
     
-    
-    public void displayResult()
+    public void DisplayResult()
     {
         if (player.Class.CurrentHp > bot.Class.CurrentHp)
             Console.WriteLine("Bravo ! Vous avez gagné !"); 
@@ -79,7 +94,7 @@ public class Game
             Console.WriteLine("Boouuuh vous avez perdu !"); 
     }
 
-    public bool endGame()
+    public bool EndGame()
     {
         return player.Class.CurrentHp <= 0 || bot.Class.CurrentHp <= 0;
     }

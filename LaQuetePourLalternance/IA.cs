@@ -20,26 +20,36 @@ public class Ia
 
     public void SetAdversary(Hero adv) => _class.SetAdversary(adv);
     
-    public void Attack()
+    public HeroAction Attack()
     {
         var rand = Helper.Rand;
         //TODO : Faire soit en sorte que le Bot commence en premier, soit que le text ce montre apres l'action
         // Car actuellement on peut voir ce que le bot fait a l'avance
+
+        Action action;
+        int order = 0;
+
         int rdmNumber = rand.Next() % 3;
         if (rdmNumber == 0)
         {
             //Console.WriteLine($"{Class.Name} décide de se défendre face au danger !");
-            _class.Defend();
+            action = _class.Defend;
+            order = 4;
         }else if (rdmNumber == 1)
         {
             //Console.WriteLine($"{Class.Name} utilise son abilité spéciale !");
-            _class.Special();
+            action = _class.Special;
+            order = _class.SpecialOrder;
         }
         else
         {
-            //Console.WriteLine($"{Class.Name} décide de se battre avec tout le peu de force qu'un robot peu avoir.");
-            _class.DoDamage(_class.Damage);
+            action = () => { 
+                _class.DoDamage(_class.Damage);
+            };
+            order = 5;
         }
+
+        return new HeroAction(action, order);
     }
 
     private Hero InitiateClass(HeroClassesEnum heroChoice)

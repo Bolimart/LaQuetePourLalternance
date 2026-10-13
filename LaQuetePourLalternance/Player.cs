@@ -33,7 +33,7 @@ public class Player
 
     public void SetAdversary(Hero adv) => _class.SetAdversary(adv);
     
-    public void Attack()
+    public HeroAction Attack()
     {
         int choice = 0;
         var s = $"""
@@ -42,18 +42,25 @@ public class Player
                  3 - Special : {_class.specialDesc}
                  """;
         choice = int.Parse(Helper.Asking(s, new []{"1", "2", "3"}));
-            
+
+        Action action;
+        int order = 0;
         if (choice == 2)
         {
-            _class.Defend();
+            action =_class.Defend;
+            order = 4;
         }else if (choice == 3)
         {
-            _class.Special();
+            action =_class.Special;
+            order = _class.SpecialOrder;
         }
         else
         {
-            _class.DoDamage(_class.Damage);
+            action = () => _class.DoDamage(_class.Damage);
+            order = 5;
         }
+
+        return new HeroAction(action, order);
     }
 
     private Hero InitiateClass(HeroClassesEnum heroChoice)

@@ -9,8 +9,12 @@ public enum HeroClassesEnum
 
 public abstract class Hero
 {
-    protected Hero(Ia? ia = null) { IA = ia; }
+    protected Hero(Ia? ia = null)
+    {
+        IA = ia;
+    }
     
+    public int SpecialOrder { get; protected set; }
     public HeroClassesEnum Classe;
 
     public Ia? IA;
@@ -80,7 +84,8 @@ public class Healer : Hero
         Damage = 1;
         MaxHp = 4;
         CurrentHp = MaxHp;
-        Name = "Yithash";
+        Name = (IA != null ? "Dark " : "") + "Yithash";
+        SpecialOrder = 6;
         attackDesc = "Bitch slap.";
         deffendDesc = "Il prend sa pause matcha, ne le dérangez pas";
         specialDesc = "Miku miku beam (nom très à côté de la plaque).";
@@ -89,7 +94,7 @@ public class Healer : Hero
     public override void Special()
     {
         base.Special();
-        Console.WriteLine("Yithash se régénère! Il gagne 2 PV !");
+        Console.WriteLine($"{Name} se régénère! Il gagne 2 PV !");
         CurrentHp += 2;
         if (CurrentHp > MaxHp) { CurrentHp = MaxHp; }
     }
@@ -103,15 +108,16 @@ public class Tank : Hero
         Classe = HeroClassesEnum.Tank;
         Damage = 1;
         MaxHp = 5;
+        SpecialOrder = 2;
         CurrentHp = MaxHp;
-        Name = "Azdelux";
+        Name =  (IA != null ? "Dark " : "")  +"Azdelux";
         attackDesc = "*Donne un coup avec son gourdin* TIEN";
         deffendDesc = "*Se bave dessus en se protegeant avec ses bras* gnehhhhh";
         specialDesc = "*S'acharne en donnant un coup le blessant légèrement* YAAAAAAAAAHHHHH";
     }
     public override void Special()
     {
-        Console.WriteLine("Azdelux lance une attaque imparable! Il pert 1PV mais fait 2 dégâts.");
+        Console.WriteLine($"{Name} lance une attaque imparable! Il pert 1PV mais fait 2 dégâts.");
         base.Special();
         TakeDamage(1, false);
         Adversary?.TakeDamage(2, true);
@@ -126,8 +132,9 @@ public class Damager : Hero
         Classe = HeroClassesEnum.Damager;
         Damage = 2;
         MaxHp = 3;
+        SpecialOrder = 1;
         CurrentHp = MaxHp;
-        Name = "Folet";
+        Name =  (IA != null ? "Dark " : "") + "Folet";
         attackDesc = "Donne un coup d'épée, c'est plutôt OK.";
         deffendDesc = "Il se défend, euh, c'est pas mal.";
         specialDesc = "Réfléchie l'attaque ennemie mais prend quand même les dégâts.";
@@ -136,13 +143,13 @@ public class Damager : Hero
     public override void Special()
     {
         base.Special();
-        Console.WriteLine("Folet renverra les prochains coups! (Mais les recevra quand même parce-qu'il est pas super doué).");
+        Console.WriteLine($"{Name} renverra les prochains coups! (Mais les recevra quand même parce-qu'il est pas super doué).");
         IsSpecialActive = true;
     }
     public override void TakeDamage(int damage, bool isSpecial)
     {
         base.TakeDamage(damage, isSpecial);
-        Console.WriteLine("Folet renvoie les dégâts. Mais ce fait quand même bléssé.");
+         Console.WriteLine($"{Name} renvoie les dégâts. Mais ce fait quand même bléssé.");
         if (IsSpecialActive) { DoDamage(damage); }
     }
 }
@@ -155,8 +162,9 @@ public class Custom : Hero
         Classe = HeroClassesEnum.Custom;
         Damage = 0;
         MaxHp = 5;
+        SpecialOrder = 0;
         CurrentHp = MaxHp;
-        Name = "Bolimart";
+        Name = (IA != null ? "Dark " : "") + "Bolimart";
         attackDesc = "Il attaque là ou sa fait mal, dans le porte monnaie. Son attaque retombe à 0.";
         deffendDesc = "Il se défend, il protège surtout son contrat.";
         specialDesc = "Il se tue à la tache pour obtenir son salaire. Il gagne un point d'attaque et est vulnérable pour un tour.";
@@ -164,7 +172,7 @@ public class Custom : Hero
     
     public override void Special()
     {
-        Console.WriteLine("Bolimart augmente ses dégâts pour le tour mais est vulnérable!");
+        Console.WriteLine($"{Name} augmente ses dégâts pour le tour mais est vulnérable!");
         IsSpecialActive = true;
         Damage++;
     }
@@ -173,7 +181,7 @@ public class Custom : Hero
     {
         if (IsSpecialActive)
         {
-            Console.WriteLine("Bolimart était vulnérable ce tour çi: il prend un dégât en plus");
+            Console.WriteLine($"{Name} était vulnérable ce tour çi: il prend un dégât en plus");
             base.TakeDamage(damage + 1, false);
         }
         else base.TakeDamage(damage, isSpecial);
@@ -184,4 +192,10 @@ public class Custom : Hero
         base.DoDamage(damage);
         Damage = 0;
     }
+}
+
+public struct HeroAction(Action _action, int _order)
+{
+    public Action action = _action;
+    public int order = _order;
 }
