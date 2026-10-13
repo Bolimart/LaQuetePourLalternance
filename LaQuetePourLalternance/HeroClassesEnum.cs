@@ -9,16 +9,11 @@ public enum HeroClassesEnum
 
 public abstract class Hero
 {
-    protected Hero(Ia? ia = null)
-    {
-        IA = ia;
-    }
-    
+    protected Hero(Ia? ia = null) { IA = ia; }
     
     public HeroClassesEnum Classe;
 
     public Ia? IA;
-
     public Hero? Adversary;
     
     public int CurrentHp;
@@ -26,7 +21,6 @@ public abstract class Hero
     public int Damage;
 
     public bool IsDefending;
-    
     public bool IsSpecialActive;
 
     public string Name = "";
@@ -45,28 +39,15 @@ public abstract class Hero
         int dmgTaken = 0;
         if (IsDefending)
         {
-            if (isSpecial)
-            {
-                dmgTaken = 1;
-            }
-            else
-            {
-                dmgTaken =  0;
-            }
+            if (isSpecial) { dmgTaken = 1; }
+            else { dmgTaken =  0; }
         }
-        else
-        {
-            dmgTaken = damage;
-        }
+        else { dmgTaken = damage; }
 
         if (IA != null) IA.DamageTaken = dmgTaken;
 
         CurrentHp -= dmgTaken;
-
-        if (CurrentHp < 0)
-        {
-            CurrentHp = 0;
-        }
+        if (CurrentHp < 0) { CurrentHp = 0; }
     }
 
     public virtual void DoDamage(int damage)
@@ -76,10 +57,9 @@ public abstract class Hero
         Adversary?.TakeDamage(damage, false);
     }
 
-
     public virtual void Special()
     {
-        
+        // normal si vide, c'est changé + tard
     }
 
     public void Defend()
@@ -88,15 +68,12 @@ public abstract class Hero
         IsDefending = true;
     }
     
-    public void SetAdversary(Hero adv)
-    {
-        Adversary ??= adv;
-    }
-    
+    public void SetAdversary(Hero adv) { Adversary ??= adv; }
 }
 
 public class Healer : Hero
 {
+    // Variables de base pour le Healer
     public Healer(Ia? ia = null) : base(ia)
     {
         Classe = HeroClassesEnum.Healer;
@@ -108,22 +85,19 @@ public class Healer : Hero
         deffendDesc = "Il prend sa pause matcha, ne le dérangez pas";
         specialDesc = "Miku miku beam (nom très à côté de la plaque).";
     }
-
+    
     public override void Special()
     {
         base.Special();
         Console.WriteLine("Yithash se régénère! Il gagne 2 PV !");
         CurrentHp += 2;
-        if (CurrentHp > MaxHp)
-        {
-            CurrentHp = MaxHp;
-        }
+        if (CurrentHp > MaxHp) { CurrentHp = MaxHp; }
     }
-    
 }
 
 public class Tank : Hero
 {
+    // Variables de base pour le Tank
     public Tank(Ia? ia = null) : base(ia)
     {
         Classe = HeroClassesEnum.Tank;
@@ -142,11 +116,11 @@ public class Tank : Hero
         TakeDamage(1, false);
         Adversary?.TakeDamage(2, true);
     }
-
 }
 
 public class Damager : Hero
 {
+    // Variables de base pour le Damager
     public Damager(Ia? ia = null) : base(ia)
     {
         Classe = HeroClassesEnum.Damager;
@@ -165,20 +139,17 @@ public class Damager : Hero
         Console.WriteLine("Folet renverra les prochains coups! (Mais les recevra quand même parce-qu'il est pas super doué).");
         IsSpecialActive = true;
     }
-
     public override void TakeDamage(int damage, bool isSpecial)
     {
         base.TakeDamage(damage, isSpecial);
         Console.WriteLine("Folet renvoie les dégâts. Mais ce fait quand même bléssé.");
-        if (IsSpecialActive)
-        {
-            DoDamage(damage);
-        }
+        if (IsSpecialActive) { DoDamage(damage); }
     }
 }
 
 public class Custom : Hero
 {
+    // Variables de base pour la classe custom
     public Custom(Ia? ia = null) : base(ia)
     {
         Classe = HeroClassesEnum.Custom;
