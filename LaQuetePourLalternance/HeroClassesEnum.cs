@@ -112,7 +112,7 @@ public class Healer : Hero
     public override void Special()
     {
         base.Special();
-        Console.WriteLine("Yithash se régénère! Il gagne de PV !");
+        Console.WriteLine("Yithash se régénère! Il gagne 2 PV !");
         CurrentHp += 2;
         if (CurrentHp > MaxHp)
         {

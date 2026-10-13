@@ -5,7 +5,7 @@ public class Ia
 {
     public Ia()
     {
-        var rand = new Random();
+        var rand = Helper.Rand;
         var heroClass = (HeroClassesEnum)(rand.Next() % 3);
         _class = InitiateClass(heroClass);
     }
@@ -22,22 +22,22 @@ public class Ia
     
     public void Attack()
     {
-        var rand = new Random();
-        //TODO : Faire soit en sorte que le Bot commence en premier, soit que le texre ce montre apres l'action
+        var rand = Helper.Rand;
+        //TODO : Faire soit en sorte que le Bot commence en premier, soit que le text ce montre apres l'action
         // Car actuellement on peut voir ce que le bot fait a l'avance
         int rdmNumber = rand.Next() % 3;
         if (rdmNumber == 0)
         {
-            Console.WriteLine($"{Class.Name} décide de se défendre face au danger !");
+            //Console.WriteLine($"{Class.Name} décide de se défendre face au danger !");
             _class.Defend();
         }else if (rdmNumber == 1)
         {
-            Console.WriteLine($"{Class.Name} utilise son abilité spéciale !");
+            //Console.WriteLine($"{Class.Name} utilise son abilité spéciale !");
             _class.Special();
         }
         else
         {
-            Console.WriteLine($"{Class.Name} décide de se battre avec tout le peu de force qu'un robot peu avoir.");
+            //Console.WriteLine($"{Class.Name} décide de se battre avec tout le peu de force qu'un robot peu avoir.");
             _class.DoDamage(_class.Damage);
         }
     }

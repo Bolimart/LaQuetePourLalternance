@@ -52,6 +52,7 @@ public class Game
         display();
         player.Class.StartTurn();
         player.Attack();
+        Console.ReadLine();
     }  
     
     public void botTurn()
@@ -60,6 +61,7 @@ public class Game
         display();
         bot.Class.StartTurn();
         bot.Attack();
+        Console.ReadLine();
     }
     
     

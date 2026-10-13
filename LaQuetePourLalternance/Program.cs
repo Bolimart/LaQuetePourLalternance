@@ -12,6 +12,8 @@ internal class Program
 
 static class Helper 
 {
+    public static Random Rand = new ();
+    
     public static string Asking(string question, string?[] answers = null)
     {
         string answer = "";
