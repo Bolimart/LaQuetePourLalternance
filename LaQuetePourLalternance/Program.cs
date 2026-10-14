@@ -1,4 +1,7 @@
-﻿namespace LaQuetePourLalternance;
+﻿using System.Diagnostics;
+using System.Globalization;
+
+namespace LaQuetePourLalternance;
 
 internal class Program
 {
@@ -8,7 +11,13 @@ internal class Program
 
         if (args.Length >= 1)
         {
-            game.StartSimulation();
+            if (!int.TryParse(args[0], null, out var result))
+            {
+                Console.WriteLine("Usage: LaQuetePourLalternance [numberOfSimulationPerCombat]");
+                return ;
+            }
+            
+            game.StartSimulation(result);
             return ;
         }
         

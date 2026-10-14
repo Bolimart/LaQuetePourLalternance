@@ -37,13 +37,45 @@ public class Ia
                 return CustomAI();
         }
     }
+    
+    /*public HeroAction Attack()
+    {
+        var rand = Helper.Rand;
+        //TODO : Faire soit en sorte que le Bot commence en premier, soit que le text ce montre apres l'action
+        // Car actuellement on peut voir ce que le bot fait a l'avance
+
+        Action action;
+        int order = 0;
+
+        int rdmNumber = rand.Next() % 3;
+        if (rdmNumber == 0)
+        {
+            //Console.WriteLine($"{Class.Name} décide de se défendre face au danger !");
+            action = _class.Defend;
+            order = 4;
+        }else if (rdmNumber == 1)
+        {
+            //Console.WriteLine($"{Class.Name} utilise son abilité spéciale !");
+            action = _class.Special;
+            order = _class.SpecialOrder;
+        }
+        else
+        {
+            action = () => { 
+                _class.DoDamage(_class.Damage);
+            };
+            order = 5;
+        }
+
+        return new HeroAction(action, order);
+    }*/
 
     public void Reset()
     {
         Class.CurrentHp = MaxHealth;
-        Class.Adversary = null;
         Class.IsDefending = false;
         Class.IsSpecialActive = false;
+        Class.Damage = Class.StartDamage;
     }
 
     private HeroAction HealersAI()
@@ -55,7 +87,7 @@ public class Ia
             if (_class.Adversary?.CurrentHp <= 2)
             {
                 int rdm = Helper.Rand.Next() % 10;
-                if (rdm < 3)
+                if (rdm <= 3)
                 {
                     action = _class.Special;
                     order = _class.SpecialOrder;
@@ -69,8 +101,18 @@ public class Ia
             }
             else
             {
-                action = _class.Special;
-                order = _class.SpecialOrder;
+                int rdm = Helper.Rand.Next() % 10;
+                if (rdm < 5)
+                {
+                    action = _class.Special;
+                    order = _class.SpecialOrder;
+                }else
+                {
+                    action = () => { 
+                        _class.DoDamage(_class.Damage);
+                    };
+                    order = 5;
+                }
             }
         }
         else
@@ -87,10 +129,37 @@ public class Ia
     {
         Action action;
         int order;
-        if (_class.CurrentHp >= _class.Adversary?.Damage)
+        if (_class.Adversary?.CurrentHp <=2)
         {
-            action = _class.Special;
-            order = _class.SpecialOrder;
+            int rdm = Helper.Rand.Next() % 10;
+            if (rdm < 2)
+            {
+                action = _class.Defend;
+                order = 4;
+            }
+            else
+            {
+                action = () => { _class.DoDamage(_class.Damage); };
+                order = 5;
+            }
+            
+            
+        }else if (_class.CurrentHp >= _class.Adversary?.Damage)
+        {
+            int rdm = Helper.Rand.Next() % 10;
+            if (rdm < 3)
+            {
+                action = _class.Special;
+                order = _class.SpecialOrder;
+            }
+            else
+            {
+                action = () => { 
+                    _class.DoDamage(_class.Damage);
+                };
+                order = 5;
+            }
+            
         }
         else
         {
@@ -116,19 +185,52 @@ public class Ia
     {
         Action action;
         int order;
-        if (_class.Adversary?.CurrentHp == 1 && _class.CurrentHp != 1)
+        
+        if (_class.Adversary?.CurrentHp <= 2)
         {
-            action = _class.Special;
-            order = _class.SpecialOrder;
-        }else if (_class.CurrentHp > 2)
+            int rdm = Helper.Rand.Next() % 10;
+            if (rdm < 3)
+            {
+                action = _class.Special;
+                order = _class.SpecialOrder;
+            }
+            else
+            {
+                action = () => { 
+                    _class.DoDamage(_class.Damage);
+                };
+                order = 5;
+            }
+        }else if (_class.CurrentHp > (3 + _class.Adversary?.StartDamage - 1))
         {
-            action = _class.Special;
-            order = _class.SpecialOrder;
+            int rdm = Helper.Rand.Next() % 10;
+            if (rdm < 2)
+            {
+                rdm = Helper.Rand.Next() % 10;
+                if(rdm > 5)
+                {
+                    action = _class.Special;
+                    order = _class.SpecialOrder;
+                }
+                else
+                {
+                    action = _class.Defend;
+                    order = 4;
+                }
+            }
+            else
+            {
+                action = () => { 
+                    _class.DoDamage(_class.Damage);
+                };
+                order = 5;
+            }
+            
         }
         else
         {
             int rdm = Helper.Rand.Next() % 10;
-            if (rdm < 5)
+            if (rdm < 3)
             {
                 action = _class.Defend;
                 order = 4;
@@ -150,12 +252,22 @@ public class Ia
         int order;
         if (_class.Damage == 0)
         {
-            action = _class.Special;
-            order = _class.SpecialOrder;
+            int rdm = Helper.Rand.Next() % 10;
+            if (rdm < 7)
+            {
+                action = _class.Special;
+                order = _class.SpecialOrder;
+            }
+            else
+            {
+                action = _class.Defend;
+                order = 4;
+            }
+            
         }else if (_class.CurrentHp > 2)
         {
             int rdm = Helper.Rand.Next() % 10;
-            if (rdm < 7)
+            if (rdm < 6)
             {
                 action = _class.Defend;
                 order = 4;
@@ -173,7 +285,7 @@ public class Ia
             {
                 action = _class.Special;
                 order = _class.SpecialOrder;
-            }else if (rdm < 4)
+            }else if (rdm < 5)
             {
                 action = _class.Defend;
                 order = 4;

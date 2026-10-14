@@ -63,88 +63,134 @@ public class Game
         }
     }
 
-    public void StartSimulation()
+    public void StartSimulation(int nbrOfSimulation) // utiliser pour la simmulation des algorithmes de l'IA
     {
         float c = 0;
-        var iaHealer = new Ia(HeroClassesEnum.Healer, true);
+        
+        // On instancie les IA avec leurs classes respective, en mode debug pour pas qu'elle ne fournissent d'output dans la console
+        var iaHealer = new Ia(HeroClassesEnum.Healer, true); 
         var iaDamager = new Ia(HeroClassesEnum.Damager, true);
         var iaTank = new Ia(HeroClassesEnum.Tank, true);
         var iaCustom = new Ia(HeroClassesEnum.Custom, true);
-
-        float[,] numberOfTimeWon = new float[4,4];
-
-        List<Ia> list = new List<Ia>() { iaDamager, iaHealer, iaCustom, iaTank };
         
-        for(int k = 0; k < list.Count; k++)
-        for (int w = (k + 1); w < list.Count; w++)
-        {
-            var currentAi1 = list[k];
-            var currentAi2 = list[w];
-            
-            currentAi1.SetAdversary(currentAi2.Class);
-            currentAi2.SetAdversary(currentAi1.Class);
-            
-            for(int i = 0; i < 100; i++)
-            {
-            
-                HeroAction actionJoueur;
-                HeroAction actionBot;
-
-                int j = 0;
-                while (!(currentAi1.Class.CurrentHp <= 0 || currentAi2.Class.CurrentHp <= 0) && j < 10000)
-                {
-                    actionJoueur = AITurn(currentAi1);
-                    actionBot = AITurn(currentAi2);
-                
-                    if (actionJoueur.order <= actionBot.order)
-                    {
-                        actionJoueur.action.Invoke();
-                        actionBot.action.Invoke();
-                    }
-                    else
-                    {
-                        actionBot.action.Invoke();
-                        actionJoueur.action.Invoke();
-                    }
-                    
-                    j++;
-
-                } // Boucle Gameplay limité a 20 turn;
-
-                if (currentAi1.Class.CurrentHp <= 0)
-                {
-                    Console.WriteLine($"{currentAi1.Class.Name} has won");
-                    numberOfTimeWon[k, w] += 1;
-                }
-                else if(currentAi2.Class.CurrentHp <= 0)
-                {
-                    Console.WriteLine($"{currentAi2.Class.Name} has won.");
-                    numberOfTimeWon[w, k] += 1;
-                }
-                else
-                {
-                    numberOfTimeWon[k, w] += 1;
-                    numberOfTimeWon[w, k] += 1;
-
-                }
-
-                c += 1;
-                currentAi1.Reset();
-                currentAi2.Reset();
-
-                Console.WriteLine($"Simulation is {(c / 600) * 100} Done.");
-            }
-        }
-
+        // Tableau qui stocke le nombre de fois gagner par une classe en fonction d'une autre classe, les colonnes représentent le nombre de fois gagner par l'ia, et la ligne l'adversaire.
+        float[,] numberOfTimeWon = new float[4,4];
         for (int i = 0; i < 4; i++)
         {
             for (int j = 0; j < 4; j++)
             {
-                Console.Write($"|{numberOfTimeWon[i,j]}|");
+                numberOfTimeWon[i, j] = 0;
             }
-            Console.WriteLine();
         }
+    
+        List<Ia> list = new List<Ia>() { iaDamager, iaHealer, iaCustom, iaTank };
         
+        for(int ligne = 0; ligne < 4; ligne++) 
+        for (int colonne = (ligne + 1); colonne < 4; colonne++) // Nous n'avons que besoin de ressenser la moitier de la liste (sans diagonale) car il n'y a pas de combat entre deux meme classes,
+                                                                // et car il est inutile de simuler l'autre parti du tableau, car les entrée son commutative.
+        {
+            var currentAi1 = list[ligne];
+            var currentAi2 = list[colonne];
+            
+            currentAi1.SetAdversary(currentAi2.Class); // Change l'adversaire de l'ia 1 et 2, permet de ne pas a avoir recrée une isntance a chaque changement.
+            currentAi2.SetAdversary(currentAi1.Class);
+
+            for(int i = 0; i < nbrOfSimulation; i++)
+            {
+                HeroAction actionIa1;
+                HeroAction actionIa2;
+
+                int j = 0;
+                while (!(currentAi1.Class.CurrentHp <= 0 || currentAi2.Class.CurrentHp <= 0) && j < 100) // Après 100 Tour, le combat s'arrete, car jugée infini, cela coupe le temps de simulation au coup de a fiabilité.
+                {
+                    actionIa1 = AITurn(currentAi1);
+                    actionIa2 = AITurn(currentAi2);
+                
+                    if (actionIa1.order <= actionIa2.order) 
+                    {
+                        actionIa1.action.Invoke();
+                        actionIa2.action.Invoke();
+                    }
+                    else
+                    {
+                        actionIa2.action.Invoke();
+                        actionIa1.action.Invoke();
+                    }
+                    
+                    j++;
+
+                } // Fin des tours, commancement du comptage
+
+                if (currentAi1.Class.CurrentHp <= 0) // Ajoute un point a une ia si elle est gagnante, ne compte pas de point si le résultat est compté comme infini.
+                {
+                    numberOfTimeWon[ligne, colonne] += 1;
+                }
+                else if(currentAi2.Class.CurrentHp <= 0)
+                {
+                    numberOfTimeWon[colonne, ligne] += 1;
+                }
+
+                c += 1; // counter du nombre de combat simuler
+                currentAi1.Reset(); // Reset les variables comme la vie etc pour recommancer un tour.
+                currentAi2.Reset();
+
+                Console.WriteLine($"Simulation is {((c / (6 * nbrOfSimulation))).ToString("P3")} Done."); // permet de suivre le progrès de la simulation.
+            } // Fin de la simulation des deux ia, changement a d'autre ia
+        } // Fin de boucle
+
+        Affichage(numberOfTimeWon, nbrOfSimulation);
+
+    }
+
+    public void Affichage(float[,] numberOfTimeWon, int nbrOfSimulation)
+    {
+        string[] names = { "Damager", "Healer", "Custom", "Tank" };
+
+        const int cellWidth = 12;
+
+        // Ligne de séparation
+        string separator = "+";
+        for (int i = 0; i < names.Length + 1; i++)
+        {
+            separator += new string('-', cellWidth) + "+";
+        }
+
+        // En-tête
+        Console.WriteLine(separator);
+
+        Console.Write($"|{"",cellWidth}");
+        foreach (var name in names)
+        {
+            Console.Write($"|{name,cellWidth}");
+        }
+        Console.WriteLine("|");
+
+        Console.WriteLine(separator);
+
+        for (int i = 0; i < names.Length; i++)
+        {
+            Console.Write($"|{names[i],cellWidth}");
+
+            for (int j = 0; j < names.Length; j++)
+            {
+                string value;
+
+                if (i == j)
+                {
+                    value = "-";
+                }
+                else
+                {
+                    value = (numberOfTimeWon[i, j] / nbrOfSimulation).ToString("P2");
+                }
+
+                Console.Write($"|{value,cellWidth}");
+            }
+
+            Console.WriteLine("|");
+        }
+
+        Console.WriteLine(separator);
     }
 
     public HeroAction PlayerTurn()

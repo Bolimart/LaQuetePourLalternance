@@ -22,6 +22,7 @@ public abstract class Hero
     
     public int CurrentHp;
     public int MaxHp;
+    public int StartDamage;
     public int Damage;
 
     public bool IsDefending;
@@ -80,7 +81,7 @@ public abstract class Hero
         IsDefending = true;
     }
     
-    public void SetAdversary(Hero adv) { Adversary ??= adv; }
+    public virtual void SetAdversary(Hero adv) { Adversary = adv; }
 }
 
 public class Healer : Hero
@@ -89,6 +90,7 @@ public class Healer : Hero
     public Healer(Ia? ia = null) : base(ia)
     {
         Classe = HeroClassesEnum.Healer;
+        StartDamage = 1;
         Damage = 1;
         MaxHp = 4;
         CurrentHp = MaxHp;
@@ -118,6 +120,7 @@ public class Tank : Hero
     public Tank(Ia? ia = null) : base(ia)
     {
         Classe = HeroClassesEnum.Tank;
+        StartDamage = 1;
         Damage = 1;
         MaxHp = 5;
         SpecialOrder = 2;
@@ -143,6 +146,7 @@ public class Damager : Hero
     public Damager(Ia? ia = null) : base(ia)
     {
         Classe = HeroClassesEnum.Damager;
+        StartDamage = 2;
         Damage = 2;
         MaxHp = 3;
         SpecialOrder = 1;
@@ -162,10 +166,25 @@ public class Damager : Hero
     }
     public override void TakeDamage(int damage, bool isSpecial)
     {
-        base.TakeDamage(damage, isSpecial);
+        /*if(IsSpecialActive)
+            base.TakeDamage(1, isSpecial);
+        else*/ // Amelioration pour le gameplay, mais ça aide pas tant que ça
+            base.TakeDamage(damage, isSpecial);
+            
+        
         if (IA == null || !IA.Debug) 
             Console.WriteLine($"{Name} renvoie les dégâts. Mais ce fait quand même bléssé.");
         if (IsSpecialActive) { DoDamage(damage); }
+    }
+
+    public override void SetAdversary(Hero adv)
+    {
+        base.SetAdversary(adv);
+        /*if (adv.Classe == HeroClassesEnum.Tank ||adv.Classe == HeroClassesEnum.Custom) //Amelioration faite pour le fair play, mais c'est pas dans les consignes
+        {
+            MaxHp = 4;
+            CurrentHp = 4;
+        }*/
     }
 }
 
@@ -176,6 +195,7 @@ public class Custom : Hero
     {
         Classe = HeroClassesEnum.Custom;
         Damage = 0;
+        StartDamage = 0;
         MaxHp = 5;
         SpecialOrder = 0;
         CurrentHp = MaxHp;
