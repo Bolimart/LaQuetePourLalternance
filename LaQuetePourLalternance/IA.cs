@@ -3,12 +3,15 @@
 using System;
 public class Ia
 {
-    public Ia()
+    public Ia(HeroClassesEnum? classe = null, bool debug = false)
     {
         var rand = Helper.Rand;
-        var heroClass = (HeroClassesEnum)(rand.Next() % 3);
+        var heroClass = classe == null? (HeroClassesEnum)(rand.Next() % 3) : classe.Value;
         _class = InitiateClass(heroClass);
+        Debug = debug;
     }
+
+    public bool Debug;
     
     private Hero _class;
     
@@ -33,6 +36,14 @@ public class Ia
             default:
                 return CustomAI();
         }
+    }
+
+    public void Reset()
+    {
+        Class.CurrentHp = MaxHealth;
+        Class.Adversary = null;
+        Class.IsDefending = false;
+        Class.IsSpecialActive = false;
     }
 
     private HeroAction HealersAI()

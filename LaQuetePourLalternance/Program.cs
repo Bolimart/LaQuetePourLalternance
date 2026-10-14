@@ -5,7 +5,15 @@ internal class Program
     public static void Main(string[] args)
     {
         Game game = new();
+
+        if (args.Length >= 1)
+        {
+            game.StartSimulation();
+            return ;
+        }
+        
         game.StartGame();
+        
     }
 }
 

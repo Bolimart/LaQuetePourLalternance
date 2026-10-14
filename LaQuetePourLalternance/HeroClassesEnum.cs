@@ -56,8 +56,12 @@ public abstract class Hero
 
     public virtual void DoDamage(int damage)
     {
-        Console.WriteLine(Name + " fait " + damage + " dégâts à son adversaire.");
-        if (Adversary?.IsDefending ?? false) Console.WriteLine("Mais l'adversaire ce défend et ne prend pas de dégâts.");
+        if (IA == null || !IA.Debug)
+        {
+            Console.WriteLine(Name + " fait " + damage + " dégâts à son adversaire.");
+            if (Adversary?.IsDefending ?? false) Console.WriteLine("Mais l'adversaire ce défend et ne prend pas de dégâts.");
+        }
+        
         Adversary?.TakeDamage(damage, false);
     }
 
@@ -68,7 +72,11 @@ public abstract class Hero
 
     public void Defend()
     {
-        Console.WriteLine(Name + " se défend!");
+        if (IA == null || !IA.Debug)
+        {
+            Console.WriteLine(Name + " se défend!");
+        }
+
         IsDefending = true;
     }
     
@@ -94,7 +102,11 @@ public class Healer : Hero
     public override void Special()
     {
         base.Special();
-        Console.WriteLine($"{Name} se régénère! Il gagne 2 PV !");
+        if (IA == null || !IA.Debug)
+        {
+            Console.WriteLine($"{Name} se régénère! Il gagne 2 PV !");
+        }
+
         CurrentHp += 2;
         if (CurrentHp > MaxHp) { CurrentHp = MaxHp; }
     }
@@ -117,7 +129,8 @@ public class Tank : Hero
     }
     public override void Special()
     {
-        Console.WriteLine($"{Name} lance une attaque imparable! Il pert 1PV mais fait 2 dégâts.");
+        if (IA == null || !IA.Debug)
+            Console.WriteLine($"{Name} lance une attaque imparable! Il pert 1PV mais fait 2 dégâts.");
         base.Special();
         TakeDamage(1, false);
         Adversary?.TakeDamage(2, true);
@@ -143,13 +156,15 @@ public class Damager : Hero
     public override void Special()
     {
         base.Special();
-        Console.WriteLine($"{Name} renverra les prochains coups! (Mais les recevra quand même parce-qu'il est pas super doué).");
+        if (IA == null || !IA.Debug)
+            Console.WriteLine($"{Name} renverra les prochains coups! (Mais les recevra quand même parce-qu'il est pas super doué).");
         IsSpecialActive = true;
     }
     public override void TakeDamage(int damage, bool isSpecial)
     {
         base.TakeDamage(damage, isSpecial);
-         Console.WriteLine($"{Name} renvoie les dégâts. Mais ce fait quand même bléssé.");
+        if (IA == null || !IA.Debug) 
+            Console.WriteLine($"{Name} renvoie les dégâts. Mais ce fait quand même bléssé.");
         if (IsSpecialActive) { DoDamage(damage); }
     }
 }
@@ -172,7 +187,8 @@ public class Custom : Hero
     
     public override void Special()
     {
-        Console.WriteLine($"{Name} augmente ses dégâts pour le tour mais est vulnérable!");
+        if (IA == null || !IA.Debug)
+            Console.WriteLine($"{Name} augmente ses dégâts pour le tour mais est vulnérable!");
         IsSpecialActive = true;
         Damage++;
     }
@@ -181,7 +197,9 @@ public class Custom : Hero
     {
         if (IsSpecialActive)
         {
-            Console.WriteLine($"{Name} était vulnérable ce tour çi: il prend un dégât en plus");
+            if (IA == null || !IA.Debug)
+                Console.WriteLine($"{Name} était vulnérable ce tour çi: il prend un dégât en plus");
+            
             base.TakeDamage(damage + 1, false);
         }
         else base.TakeDamage(damage, isSpecial);
