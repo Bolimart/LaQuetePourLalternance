@@ -11,11 +11,11 @@ internal class Program
         
         var shader = new Shader("shader.vert", "shader.frag");
         
-        GameEnvironement.Window.AddSquare(new Square(new SquareData(
+        GameEnvironement.Window.AddGameObject(new Square(new SquareData(
             new(0, 0, 0), new(2, 2, 1), 0.0f, 
             new Texture("EpicGameIntro.png"), shader)));
         
-        GameEnvironement.Window.AddSquare(new Square(new SquareData(
+        GameEnvironement.Window.AddGameObject(new Square(new SquareData(
             new(0, 0, 0), new(1, 1, 1), 0.0f, 
             new Texture("Vincent_Dead.png"), shader)));
         

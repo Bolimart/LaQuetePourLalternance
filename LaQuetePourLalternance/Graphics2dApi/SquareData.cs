@@ -4,13 +4,24 @@ using LaQuetePourLalternance.Graphics2dApi;
 
 namespace LaQuetePourLalternance.Graphics2dApi;
 
-public struct SquareData
+public class SquareData
 {
     public Vector3 Position;
     public Vector3 Scale;
     public float Rotation;
     public Texture Texture;
     public Shader Shader;
+    
+    public static float[] Verticies = {
+        // Triangle 1
+        0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+        0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+        -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+        // Triangle 2
+        0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+        -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+    };
 
     public SquareData(Vector3 position, Vector3 scale, float rotation, Texture texture, Shader shader)
     {
@@ -23,33 +34,22 @@ public struct SquareData
         texture.AddReference();
     }
 
+    public virtual void Use()
+    {
+        Shader.Use();
+        Texture.Use();
+    }
+    
     public void ScaleAccordingToTex(float scale = 1)
     {
         Scale.X = Texture.Dimension.X * scale;
         Scale.Y = Texture.Dimension.Y * scale;
     }
-    
-    public void Use()
-    {
-        Texture.Use();
-        Shader.Use();
-    }
-    
-    public static float[] Verticies = {
-        // Triangle 1
-        0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
-        0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-        -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
-        // Triangle 2
-        0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-        -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
-    };
 }
 
-public class Square
+public class Square : GameObject, IDrawable
 {
-    public SquareData Data;
+    public SquareData Data { get; set; }
     public Stopwatch Time = new();
 
     public float DepthZ
@@ -68,7 +68,7 @@ public class Square
     /// <summary>
     /// Called on every logic update.
     /// </summary>
-    public virtual void Update(float dtime)
+    public override void Update(float dtime)
     {
         
     }
@@ -76,14 +76,15 @@ public class Square
     /// <summary>
     /// Called on every render call.
     /// </summary>
-    public virtual void Use(float dtime, Matrix4 projection)
+    public override void Use(float dtime)
     {
+        base.Use(dtime);
         Data.Use();
         
         Matrix4 model = GetModelMatrix();
             
         // adding a projection matrix allow for a better world placement not in the clip space
-        Data.Shader.SetMatrix4("projection", projection); // Now with proper projection !
+        Data.Shader.SetMatrix4("projection", GameEnvironement.Window.Projection); // Now with proper projection !
         Data.Shader.SetMatrix4("model", model);
         
         Data.Rotation += 1f * dtime;

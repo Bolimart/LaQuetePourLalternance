@@ -11,16 +11,18 @@ public class Window(int width, int height, string title) : GameWindow(GameWindow
 {
     #region - Fields & Propreties
 
-    private List<Square> _squares = new List<Square>();
+    public List<GameObject> Scene = new List<GameObject>();
 
     private Matrix4 _projection = Matrix4.CreateOrthographic(width, height, -1f, 100f);
-    
+
+    public Matrix4 Projection {
+        get => _projection;
+        private set => _projection = value;
+    }
+
     // Handles :
     private int _vertexBufferObject;
     private int _vertexArrayObject;
-    
-    private int _width = width;
-    private int _height = height;
     
     private int VIRT_W = width;   // largeur logique
     private int VIRT_H = height;   // hauteur logique
@@ -64,15 +66,25 @@ public class Window(int width, int height, string title) : GameWindow(GameWindow
     /// <param name="args"></param>
     protected override void OnRenderFrame(FrameEventArgs args)
     {
+        Console.WriteLine(GameEnvironement.Window.Scene.Count);
         base.OnRenderFrame(args);
         GL.Clear(ClearBufferMask.ColorBufferBit);
         
         GL.BindVertexArray(_vertexArrayObject);
         
-        foreach (var square in _squares)
+        foreach (var gameObject in Scene)
         {
-            square.Use((float)args.Time, _projection);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
+            gameObject.Use((float)args.Time);
+
+            if (gameObject is IDrawable)
+            {
+                try
+                {
+                    IDrawable drawable = gameObject as IDrawable;
+                    GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
+                }
+                catch (NullReferenceException e) {}
+            }
         }
         
         // Swap the old frame with the newly rendered frame.
@@ -88,9 +100,9 @@ public class Window(int width, int height, string title) : GameWindow(GameWindow
     {
         base.OnUpdateFrame(args);
 
-        foreach (var square in _squares)
+        foreach (var gameObject in Scene)
         {
-            square.Update((float)args.Time);
+            gameObject.Update((float)args.Time);
         }
 
         if (KeyboardState.IsKeyDown(Keys.Escape)) Close();
@@ -134,16 +146,24 @@ public class Window(int width, int height, string title) : GameWindow(GameWindow
     {
         base.OnUnload();
 
-        foreach (var square in _squares)
-            square.Unload();
+        foreach (var gameObject in Scene)
+            if (gameObject is IDrawable)
+            {
+                try
+                {
+                    IDrawable drawable = gameObject as IDrawable;
+                    GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
+                }
+                catch (NullReferenceException e) {}
+            }
     }
     
     #endregion
     #region Methods
 
-    public void AddSquare(Square square) => _squares.Add(square);
+    public void AddGameObject(GameObject gameObject) => Scene.Add(gameObject);
 
-    public void AddSquares(Square[] squares) => _squares.AddRange(squares);
+    public void AddGameObjects(GameObject[] gameObjects) => Scene.AddRange(gameObjects);
     
     /// <summary>
     /// Generate a transform matrix.
