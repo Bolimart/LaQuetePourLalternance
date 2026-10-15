@@ -1,4 +1,5 @@
 ﻿using LaQuetePourLalternance.Graphics2dApi;
+using LaQuetePourLalternance.Graphics2dApi.BasicObjects;
 using Window = LaQuetePourLalternance.Graphics2dApi.Window;
 
 namespace LaQuetePourLalternance;
@@ -7,17 +8,7 @@ internal class Program
 {
     public static void Main(string[] args)
     {
-        GameEnvironement.Init(800, 600, "La quête pour l'alternance");
-        
-        var shader = new Shader("shader.vert", "shader.frag");
-        
-        GameEnvironement.Window.AddGameObject(new Square(new SquareData(
-            new(0, 0, 0), new(2, 2, 1), 0.0f, 
-            new Texture("EpicGameIntro.png"), shader)));
-        
-        GameEnvironement.Window.AddGameObject(new Square(new SquareData(
-            new(0, 0, 0), new(1, 1, 1), 0.0f, 
-            new Texture("Vincent_Dead.png"), shader)));
+        GameEnvironement.Init(854, 480, "La quête pour l'alternance");
         
         GameEnvironement.Window.Run();
         

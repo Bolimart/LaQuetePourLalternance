@@ -16,6 +16,12 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <PackageReference Include="StbImageSharp" Version="2.30.16" />
+        <None Update="Shaders\Fragment\button.frag">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Shaders\Vertex\button.vert">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
     
 </Project>

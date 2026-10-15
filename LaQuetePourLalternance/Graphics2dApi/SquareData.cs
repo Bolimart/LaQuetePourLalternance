@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using OpenTK.Mathematics;
 using LaQuetePourLalternance.Graphics2dApi;
+using OpenTK.Graphics.ES11;
+using OpenTK.Windowing.Common;
 
 namespace LaQuetePourLalternance.Graphics2dApi;
 
@@ -27,7 +29,7 @@ public class SquareData
     {
         Position = position;
         Scale = scale;
-        Rotation = rotation;
+        Rotation = MathHelper.DegreesToRadians(rotation);
         Texture = texture;
         Shader = shader;
         shader.AddReference();
@@ -62,13 +64,12 @@ public class Square : GameObject, IDrawable
     {
         Data = data;
         DepthZ = depthZ;
-        Data.ScaleAccordingToTex(0.3f);
     }
     
     /// <summary>
     /// Called on every logic update.
     /// </summary>
-    public override void Update(float dtime)
+    public override void Update(FrameEventArgs args)
     {
         
     }
@@ -76,9 +77,8 @@ public class Square : GameObject, IDrawable
     /// <summary>
     /// Called on every render call.
     /// </summary>
-    public override void Use(float dtime)
+    public override void Use(FrameEventArgs args)
     {
-        base.Use(dtime);
         Data.Use();
         
         Matrix4 model = GetModelMatrix();
@@ -86,15 +86,15 @@ public class Square : GameObject, IDrawable
         // adding a projection matrix allow for a better world placement not in the clip space
         Data.Shader.SetMatrix4("projection", GameEnvironement.Window.Projection); // Now with proper projection !
         Data.Shader.SetMatrix4("model", model);
-        
-        Data.Rotation += 1f * dtime;
     }
     
-    public void Unload()
+    public virtual void Unload()
     {
         Data.Shader.Dispose();
         Data.Texture.Dispose();
     }
+
+    public void Flip() => Data.Scale.X *= -1;
     
     // Scale -> Rotation -> Translation
     public Matrix4 GetModelMatrix() => Matrix4.CreateScale(Data.Scale)

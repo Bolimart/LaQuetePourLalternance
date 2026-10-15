@@ -66,7 +66,6 @@ public class Window(int width, int height, string title) : GameWindow(GameWindow
     /// <param name="args"></param>
     protected override void OnRenderFrame(FrameEventArgs args)
     {
-        Console.WriteLine(GameEnvironement.Window.Scene.Count);
         base.OnRenderFrame(args);
         GL.Clear(ClearBufferMask.ColorBufferBit);
         
@@ -74,7 +73,7 @@ public class Window(int width, int height, string title) : GameWindow(GameWindow
         
         foreach (var gameObject in Scene)
         {
-            gameObject.Use((float)args.Time);
+            gameObject.Use(args);
 
             if (gameObject is IDrawable)
             {
@@ -102,7 +101,7 @@ public class Window(int width, int height, string title) : GameWindow(GameWindow
 
         foreach (var gameObject in Scene)
         {
-            gameObject.Update((float)args.Time);
+            gameObject.Update(args);
         }
 
         if (KeyboardState.IsKeyDown(Keys.Escape)) Close();
@@ -138,7 +137,7 @@ public class Window(int width, int height, string title) : GameWindow(GameWindow
             _projection = Matrix4.CreateOrthographic(VIRT_W, VIRT_H, -1f, 1f);
         }
     }
-
+    
     /// <summary>
     /// Called at the closing of the window
     /// </summary>
@@ -185,3 +184,42 @@ public class Window(int width, int height, string title) : GameWindow(GameWindow
     #endregion
 }
 
+public static class GameHelper
+{
+    public static Vector2 WorldToScreen(Vector2 worldPos)
+    {
+        var screenPos = Vector2.Zero;
+        
+        // Get the world coordinate in 2D to 3D
+        Vector4 clip = new Vector4(worldPos.X, worldPos.Y, 0f, 1f);
+        
+        // Project the point
+        clip = Vector4.TransformRow(clip, GameEnvironement.Window.Projection);
+
+        // Set the projected point -> NDC (Normalized Device Coordinates)
+        float ndcX = clip.X / clip.W;
+        float ndcY = clip.Y / clip.W;
+
+        // Move the pixel from NDC [-1, 1] -> screenspace [0, 1]
+        Vector2i size = GameEnvironement.Window.ClientSize;
+        screenPos.X = (ndcX * 0.5f + 0.5f) * size.X;
+        screenPos.Y = (1f - (ndcY * 0.5f + 0.5f)) * size.Y;
+
+        return screenPos;
+    }
+    
+    public static Vector2 ScreenToWorld(Vector2 screen)
+    {
+        Vector2i size = GameEnvironement.Window.ClientSize;
+        
+        // Move the pixel from screenspace [0, 1] -> NDC [-1, 1]
+        float ndcX = screen.X / size.X * 2f - 1f;
+        float ndcY = 1f - screen.Y / size.Y * 2f;
+        
+        // Un-project the point (only work with ortho projection)
+        Matrix4 inv = Matrix4.Invert(GameEnvironement.Window.Projection);
+        Vector4 w = Vector4.TransformRow(new Vector4(ndcX, ndcY, 0f, 1f), inv);
+
+        return new Vector2(w.X, w.Y);
+    }
+}
