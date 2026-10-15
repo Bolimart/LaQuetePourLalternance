@@ -65,7 +65,7 @@ public class Game
 
     public void StartSimulation(int nbrOfSimulation) // utiliser pour la simmulation des algorithmes de l'IA
     {
-        float c = 0;
+        ulong c = 0;
         
         // On instancie les IA avec leurs classes respective, en mode debug pour pas qu'elle ne fournissent d'output dans la console
         var iaHealer = new Ia(HeroClassesEnum.Healer, true); 
@@ -101,7 +101,7 @@ public class Game
                 HeroAction actionIa2;
 
                 int j = 0;
-                while (!(currentAi1.Class.CurrentHp <= 0 || currentAi2.Class.CurrentHp <= 0) && j < 100) // Après 100 Tour, le combat s'arrete, car jugée infini, cela coupe le temps de simulation au coup de a fiabilité.
+                while (!(currentAi1.Class.CurrentHp <= 0 || currentAi2.Class.CurrentHp <= 0) && j < 20) // Après 100 Tour, le combat s'arrete, car jugée infini, cela coupe le temps de simulation au coup de a fiabilité.
                 {
                     actionIa1 = AITurn(currentAi1);
                     actionIa2 = AITurn(currentAi2);
@@ -134,7 +134,7 @@ public class Game
                 currentAi1.Reset(); // Reset les variables comme la vie etc pour recommancer un tour.
                 currentAi2.Reset();
 
-                Console.WriteLine($"Simulation is {((c / (6 * nbrOfSimulation))).ToString("P3")} Done."); // permet de suivre le progrès de la simulation.
+                Console.WriteLine($"Simulation is {(((float)c / (6 * nbrOfSimulation))).ToString("P3")} Done."); // permet de suivre le progrès de la simulation.
             } // Fin de la simulation des deux ia, changement a d'autre ia
         } // Fin de boucle
 
