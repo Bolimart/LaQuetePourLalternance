@@ -7,12 +7,23 @@ namespace LaQuetePourLalternance.Graphics2dApi.BasicObjects;
 
 public class Button : Square
 {
+    public Vector4 HoveredColor
+    {
+        set => Data.Shader.SetVector4("hoveredColor", value);
+    }
+    public Vector4 ClickedColor
+    {
+        set => Data.Shader.SetVector4("clickedColor", value);
+    }
+
     private event Action _action;
     
     public Button(Vector3 position, Vector3 scale, float rotation, Texture texture, Action action) : base(new SquareData(position, scale, rotation, texture, new Shader("button.vert", "button.frag")))
     {
         Data.ScaleAccordingToTex();
         _action = action;
+        HoveredColor = new Vector4(1f, 1f, 1f, 1f);
+        ClickedColor = new Vector4(0f, 0f, 0f, 1f);
     }
 
     public override void Update(FrameEventArgs args)
@@ -20,13 +31,25 @@ public class Button : Square
         base.Update(args);
 
         var mouse = GameEnvironement.Window.MouseState;
-
-        if (IsInBoudingBox(mouse.Position) && mouse.IsButtonPressed(MouseButton.Left))
+        var isMouseOn = IsInBoudingBox(mouse.Position);
+        
+        if (isMouseOn)
         {
-            _action.Invoke();
-            Console.WriteLine("Button pressed");
+            if (mouse.IsButtonPressed(MouseButton.Left))
+            {
+                _action.Invoke();
+                Console.WriteLine("Button pressed");
+            }
+            else if (mouse.IsButtonDown(MouseButton.Left))
+            {
+                Data.Shader.SetBool("isHovered", false);
+                Data.Shader.SetBool("isClicked", true);
+            }
+            else if (mouse.IsButtonReleased(MouseButton.Left))
+                Data.Shader.SetBool("isClicked", false);
+            else Data.Shader.SetBool("isHovered", true);
         }
-        else if (IsInBoudingBox(mouse.Position)) Console.WriteLine("Mouse in Bounding Box");
+        else Data.Shader.SetBool("isHovered", false);
     }
     
     /// <summary>

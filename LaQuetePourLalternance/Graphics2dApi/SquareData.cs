@@ -94,7 +94,7 @@ public class Square : GameObject, IDrawable
         Data.Texture.Dispose();
     }
 
-    public void Flip() => Data.Scale.X *= -1;
+    public void Flip() => Data.Scale.X *= 1;
     
     // Scale -> Rotation -> Translation
     public Matrix4 GetModelMatrix() => Matrix4.CreateScale(Data.Scale)

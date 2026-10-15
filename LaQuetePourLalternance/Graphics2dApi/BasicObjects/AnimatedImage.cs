@@ -11,6 +11,8 @@ public class AnimatedImage : Square
     private int _currentIndex = 0;
     private float _timer = 0f;
     private float _fps = 0f;
+    public bool Shake;
+    public Vector3 BasePos;
     
     public AnimatedImage(SquareData data, Texture[] textures, float fps) : base(data)
     {
@@ -19,6 +21,7 @@ public class AnimatedImage : Square
         _timer = 1 / fps;
         _fps = fps;
         Data.Scale *= 0.3f;
+        BasePos = Data.Position;
 
         Time.Start();
     }
@@ -33,6 +36,8 @@ public class AnimatedImage : Square
             _currentIndex = _currentIndex >= _textures?.Length - 1 ? 0 : _currentIndex + 1;
             Data.Texture = _textures[_currentIndex];
         }
+        
+        if (Shake) Data.Position.X = BasePos.X + MathF.Cos((float)Time.Elapsed.TotalSeconds * 50) * 2;
     }
     
     public override void Unload()

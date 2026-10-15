@@ -10,6 +10,26 @@ internal class Program
     {
         GameEnvironement.Init(854, 480, "La quête pour l'alternance");
         
+        var shader = new Shader("shader.vert", "shader.frag");
+
+        var fond = new StaticImage(new SquareData(
+            new(0, 0, 0), new(2, 2, 1), 0.0f,
+            new Texture("EpicGameIntro.png"), shader));
+        fond.Data.Scale *= 1.5f;
+        GameEnvironement.Window.AddGameObject(fond);
+        
+        Texture[] t = new[] { new Texture("Julien/hit1.png") };
+
+        var Attacked = new AnimatedImage(new SquareData(
+            new(-200, 0, 0), new(1f, 1f, 1), 0.0f, t[0], shader), t, 3);
+        
+        Attacked.Flip();
+        GameEnvironement.Window.AddGameObject(Attacked);
+
+        var a = new Action(() => Attacked.Shake = !Attacked.Shake);
+        
+        GameEnvironement.Window.AddGameObject(new Button(new(200, 0, 0), new(1f, 1f, 1), 0.0f, new ("Button.png"), a));
+        
         GameEnvironement.Window.Run();
         
         // game.StartGame();

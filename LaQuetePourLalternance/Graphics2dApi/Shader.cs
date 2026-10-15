@@ -110,6 +110,7 @@ public class Shader : IDisposable
     public void SetFloat(string name, float value)
     {
         int location = GL.GetUniformLocation(_handle, name);
+        if (location == -1) Console.WriteLine($"Uniform '{name}' introuvable");
         Use();
         GL.Uniform1(location, value);
     }
@@ -117,8 +118,25 @@ public class Shader : IDisposable
     public void SetVector3(string name, Vector3 value)
     {
         int location = GL.GetUniformLocation(_handle, name);
+        if (location == -1) Console.WriteLine($"Uniform '{name}' introuvable");
         Use();
         GL.Uniform3(location, value);
+    }
+    
+    public void SetVector4(string name, Vector4 value)
+    {
+        int location = GL.GetUniformLocation(_handle, name);
+        if (location == -1) Console.WriteLine($"Uniform '{name}' introuvable");
+        Use();
+        GL.Uniform4(location, value);
+    }
+    
+    public void SetBool(string name, bool value)
+    {
+        int location = GL.GetUniformLocation(_handle, name);
+        if (location == -1) Console.WriteLine($"Uniform '{name}' introuvable");
+        Use();
+        GL.Uniform1(location, value ? 1 : 0);
     }
     
     #endregion
