@@ -170,13 +170,13 @@ public class Damager : Hero
             base.TakeDamage(1, isSpecial);
         else*/ // Amelioration pour le gameplay, mais ça aide pas tant que ça
 
-        if (IsSpecialActive)
+        /*if (IsSpecialActive)
         {
             int rdm = Helper.Rand.Next() % 10;
             if(rdm < 5)
                 base.TakeDamage(damage, isSpecial);
         }
-        else
+        else*/
         {
             base.TakeDamage(damage, isSpecial);
         }

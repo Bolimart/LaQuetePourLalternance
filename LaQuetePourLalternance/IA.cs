@@ -199,11 +199,15 @@ public class Ia
     {
         Action action;
         int order;
-        
-        if (_class.Adversary?.CurrentHp <= 2)
+        if (_class.Adversary?.CurrentHp == 1 && _class.CurrentHp != 1)
+        {
+            action = _class.Special;
+            order = _class.SpecialOrder;
+        }
+        else if (_class.Adversary?.CurrentHp <= 2)
         {
             int rdm = Helper.Rand.Next() % 10;
-            if (rdm < 3)
+            if (rdm < 6)
             {
                 action = _class.Special;
                 order = _class.SpecialOrder;
@@ -215,13 +219,13 @@ public class Ia
                 };
                 order = 5;
             }
-        }else if (_class.CurrentHp > (3 + _class.Adversary?.StartDamage - 1))
+        }else if (_class.CurrentHp > 3)
         {
             int rdm = Helper.Rand.Next() % 10;
-            if (rdm < 2)
+            if (rdm < 3)
             {
                 rdm = Helper.Rand.Next() % 10;
-                if(rdm > 5)
+                if(rdm > 5 && _class.CurrentHp != 1)
                 {
                     action = _class.Special;
                     order = _class.SpecialOrder;
@@ -234,10 +238,20 @@ public class Ia
             }
             else
             {
-                action = () => { 
-                    _class.DoDamage(_class.Damage);
-                };
-                order = 5;
+                rdm = Helper.Rand.Next() % 10;
+                
+                
+                if(rdm <3 ){
+                    action = _class.Defend;
+                    order = 4;
+                }
+                else
+                {
+                    action = () => { 
+                        _class.DoDamage(_class.Damage);
+                    };
+                    order = 5;
+                }
             }
             
         }

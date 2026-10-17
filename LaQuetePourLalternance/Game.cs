@@ -126,7 +126,11 @@ public class Game
 
                 } // Fin des tours, commancement du comptage
 
-                if (currentAi1.Class.CurrentHp <= 0) // Ajoute un point a une ia si elle est gagnante, ne compte pas de point si le résultat est compté comme infini.
+                if (currentAi1.Class.CurrentHp <= 0 && currentAi2.Class.CurrentHp <= 0)
+                {
+                    numberOfTimeWon[ligne, colonne] += 0.5f;
+                    numberOfTimeWon[colonne, ligne] += 0.5f;
+                }else if (currentAi1.Class.CurrentHp <= 0) // Ajoute un point a une ia si elle est gagnante, ne compte pas de point si le résultat est compté comme infini.
                 {
                     numberOfTimeWon[ligne, colonne] += 1;
                 }
@@ -138,8 +142,9 @@ public class Game
                 c += 1; // counter du nombre de combat simuler
                 currentAi1.Reset(); // Reset les variables comme la vie etc pour recommancer un tour.
                 currentAi2.Reset();
-
+                
                 Console.WriteLine($"Simulation is {(((float)c / (6 * nbrOfSimulation))).ToString("P3")} Done."); // permet de suivre le progrès de la simulation.
+                Console.SetCursorPosition(0, Console.CursorTop - 1);
             } // Fin de la simulation des deux ia, changement a d'autre ia
         } // Fin de boucle
 
