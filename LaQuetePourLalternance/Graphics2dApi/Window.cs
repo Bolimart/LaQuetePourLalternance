@@ -1,3 +1,4 @@
+using LaQuetePourLalternance.Graphics2dApi.BasicObjects;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -155,6 +156,8 @@ public class Window(int width, int height, string title) : GameWindow(GameWindow
                 }
                 catch (NullReferenceException e) {}
             }
+        
+        LetterData.Unload();
     }
     
     #endregion

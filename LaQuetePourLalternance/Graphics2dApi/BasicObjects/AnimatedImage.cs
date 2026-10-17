@@ -22,7 +22,6 @@ public class AnimatedImage : Square
         _fps = fps;
         Data.Scale *= 0.3f;
         BasePos = Data.Position;
-
         Time.Start();
     }
 

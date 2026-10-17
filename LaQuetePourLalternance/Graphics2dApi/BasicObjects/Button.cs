@@ -72,7 +72,6 @@ public class Button : Square
         Vector2 local = new Vector2(
             delta.X * cos - delta.Y * sin,
             delta.X * sin + delta.Y * cos);
-        Console.WriteLine($"écran={pos}  world={mouseCoord}  bouton={Data.Position.Xy}");
         
         return MathF.Abs(local.X) < half.X && MathF.Abs(local.Y) < half.Y;
     }

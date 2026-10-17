@@ -20,19 +20,13 @@ internal class Program
         
         Texture[] t = new[] { new Texture("Julien/hit1.png") };
 
-        var Attacked = new AnimatedImage(new SquareData(
-            new(-200, 0, 0), new(1f, 1f, 1), 0.0f, t[0], shader), t, 3);
+        var Attacked = new StringObject( "Hello world !", new(-200, 0, 0), new(1f, 1f, 1), 10.0f);
+        var c = new CharacterObject( 'c', new(-200, 0, 0), new(1f, 1f, 1), 0.0f);
         
-        Attacked.Flip();
         GameEnvironement.Window.AddGameObject(Attacked);
-
-        var a = new Action(() => Attacked.Shake = !Attacked.Shake);
-        
-        GameEnvironement.Window.AddGameObject(new Button(new(200, 0, 0), new(1f, 1f, 1), 0.0f, new ("Button.png"), a));
+        GameEnvironement.Window.AddGameObject(c);
         
         GameEnvironement.Window.Run();
-        
-        // game.StartGame();
     }
 }
 

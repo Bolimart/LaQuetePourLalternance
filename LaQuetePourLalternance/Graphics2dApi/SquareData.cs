@@ -25,7 +25,7 @@ public class SquareData
         -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
     };
 
-    public SquareData(Vector3 position, Vector3 scale, float rotation, Texture texture, Shader shader)
+    public SquareData(Vector3 position, Vector3 scale, float rotation, Texture? texture = null, Shader? shader = null)
     {
         Position = position;
         Scale = scale;
@@ -87,7 +87,7 @@ public class Square : GameObject, IDrawable
         Data.Shader.SetMatrix4("projection", GameEnvironement.Window.Projection); // Now with proper projection !
         Data.Shader.SetMatrix4("model", model);
     }
-    
+
     public virtual void Unload()
     {
         Data.Shader.Dispose();
