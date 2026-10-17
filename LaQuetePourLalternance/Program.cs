@@ -4,8 +4,14 @@ internal class Program
 {
     public static void Main(string[] args)
     {
+        Helper.Audio.Init();
+        Helper.Audio.StartEvent("event:/Music/mx_fight");
+
         Game game = new();
         game.StartGame();
+        
+        Helper.Audio.StopEvent("event:/Music/mx_fight");
+        Helper.Audio.Shutdown();
     }
 }
 
@@ -13,6 +19,7 @@ internal class Program
 static class Helper 
 {
     public static Random Rand = new ();
+    public static readonly AudioManager Audio = new();
     
     public static string Asking(string question, string?[] answers = null)
     {

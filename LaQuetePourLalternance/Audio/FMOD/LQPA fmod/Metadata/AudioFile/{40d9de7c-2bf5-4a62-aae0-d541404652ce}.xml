@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{40d9de7c-2bf5-4a62-aae0-d541404652ce}">
+		<property name="assetPath">
+			<value>LQPA Mix.wav</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>114.5</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{a3daef16-265e-447d-9299-1e456249bbab}</destination>
+		</relationship>
+	</object>
+</objects>
