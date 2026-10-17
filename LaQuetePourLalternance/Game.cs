@@ -63,15 +63,15 @@ public class Game
         }
     }
 
-    public void StartSimulation(int nbrOfSimulation) // utiliser pour la simmulation des algorithmes de l'IA
+    public void StartSimulation(ulong nbrOfSimulation, int diffictulty) // utiliser pour la simmulation des algorithmes de l'IA
     {
         ulong c = 0;
         
         // On instancie les IA avec leurs classes respective, en mode debug pour pas qu'elle ne fournissent d'output dans la console
-        var iaHealer = new Ia(HeroClassesEnum.Healer, true); 
-        var iaDamager = new Ia(HeroClassesEnum.Damager, true);
-        var iaTank = new Ia(HeroClassesEnum.Tank, true);
-        var iaCustom = new Ia(HeroClassesEnum.Custom, true);
+        var iaHealer = new Ia(HeroClassesEnum.Healer, diffictulty,true); 
+        var iaDamager = new Ia(HeroClassesEnum.Damager,diffictulty, true);
+        var iaTank = new Ia(HeroClassesEnum.Tank,diffictulty, true);
+        var iaCustom = new Ia(HeroClassesEnum.Custom,diffictulty, true);
         
         // Tableau qui stocke le nombre de fois gagner par une classe en fonction d'une autre classe, les colonnes représentent le nombre de fois gagner par l'ia, et la ligne l'adversaire.
         float[,] numberOfTimeWon = new float[4,4];
@@ -82,6 +82,12 @@ public class Game
                 numberOfTimeWon[i, j] = 0;
             }
         }
+        
+        HeroAction actionIa1;
+        HeroAction actionIa2;
+
+        Ia currentAi1;
+        Ia currentAi2;
     
         List<Ia> list = new List<Ia>() { iaDamager, iaHealer, iaCustom, iaTank };
         
@@ -89,16 +95,15 @@ public class Game
         for (int colonne = (ligne + 1); colonne < 4; colonne++) // Nous n'avons que besoin de ressenser la moitier de la liste (sans diagonale) car il n'y a pas de combat entre deux meme classes,
                                                                 // et car il est inutile de simuler l'autre parti du tableau, car les entrée son commutative.
         {
-            var currentAi1 = list[ligne];
-            var currentAi2 = list[colonne];
+            currentAi1 = list[ligne];
+            currentAi2 = list[colonne];
             
             currentAi1.SetAdversary(currentAi2.Class); // Change l'adversaire de l'ia 1 et 2, permet de ne pas a avoir recrée une isntance a chaque changement.
             currentAi2.SetAdversary(currentAi1.Class);
 
-            for(int i = 0; i < nbrOfSimulation; i++)
+            for(uint i = 0; i < nbrOfSimulation; i++)
             {
-                HeroAction actionIa1;
-                HeroAction actionIa2;
+                
 
                 int j = 0;
                 while (!(currentAi1.Class.CurrentHp <= 0 || currentAi2.Class.CurrentHp <= 0) && j < 20) // Après 100 Tour, le combat s'arrete, car jugée infini, cela coupe le temps de simulation au coup de a fiabilité.
@@ -142,7 +147,7 @@ public class Game
 
     }
 
-    public void Affichage(float[,] numberOfTimeWon, int nbrOfSimulation)
+    public void Affichage(float[,] numberOfTimeWon, ulong nbrOfSimulation)
     {
         string[] names = { "Damager", "Healer", "Custom", "Tank" };
 

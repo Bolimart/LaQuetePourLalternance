@@ -3,13 +3,16 @@
 using System;
 public class Ia
 {
-    public Ia(HeroClassesEnum? classe = null, bool debug = false)
+    public Ia(HeroClassesEnum? classe = null,int difficulty = 1 ,bool debug = false)
     {
         var rand = Helper.Rand;
         var heroClass = classe == null? (HeroClassesEnum)(rand.Next() % 3) : classe.Value;
         _class = InitiateClass(heroClass);
+        Difficulty = difficulty;
         Debug = debug;
     }
+
+    private int Difficulty;
 
     public bool Debug;
     
@@ -22,8 +25,19 @@ public class Ia
     private int MaxHealth => _class.MaxHp; // pour l'IA Ameliorer
 
     public void SetAdversary(Hero adv) => _class.SetAdversary(adv);
-    
+
     public HeroAction Attack()
+    {
+        if (Difficulty == 1)
+        {
+            return AttackDifficulty1();
+        }
+        else
+        {
+            return AttackDifficulty2();
+        }
+    }
+    public HeroAction AttackDifficulty2()
     {
         switch (_class.Classe)
         {
@@ -38,7 +52,7 @@ public class Ia
         }
     }
     
-    /*public HeroAction Attack()
+    public HeroAction AttackDifficulty1()
     {
         var rand = Helper.Rand;
         //TODO : Faire soit en sorte que le Bot commence en premier, soit que le text ce montre apres l'action
@@ -68,7 +82,7 @@ public class Ia
         }
 
         return new HeroAction(action, order);
-    }*/
+    }
 
     public void Reset()
     {
@@ -87,7 +101,7 @@ public class Ia
             if (_class.Adversary?.CurrentHp <= 2)
             {
                 int rdm = Helper.Rand.Next() % 10;
-                if (rdm <= 3)
+                if (rdm <= 6)
                 {
                     action = _class.Special;
                     order = _class.SpecialOrder;

@@ -169,8 +169,18 @@ public class Damager : Hero
         /*if(IsSpecialActive)
             base.TakeDamage(1, isSpecial);
         else*/ // Amelioration pour le gameplay, mais ça aide pas tant que ça
+
+        if (IsSpecialActive)
+        {
+            int rdm = Helper.Rand.Next() % 10;
+            if(rdm < 5)
+                base.TakeDamage(damage, isSpecial);
+        }
+        else
+        {
             base.TakeDamage(damage, isSpecial);
-            
+        }
+        
         
         if (IA == null || !IA.Debug) 
             Console.WriteLine($"{Name} renvoie les dégâts. Mais ce fait quand même bléssé.");
@@ -180,11 +190,11 @@ public class Damager : Hero
     public override void SetAdversary(Hero adv)
     {
         base.SetAdversary(adv);
-        /*if (adv.Classe == HeroClassesEnum.Tank ||adv.Classe == HeroClassesEnum.Custom) //Amelioration faite pour le fair play, mais c'est pas dans les consignes
+        if (adv.Classe == HeroClassesEnum.Tank ||adv.Classe == HeroClassesEnum.Custom) //Amelioration faite pour le fair play, mais c'est pas dans les consignes
         {
             MaxHp = 4;
             CurrentHp = 4;
-        }*/
+        }
     }
 }
 
