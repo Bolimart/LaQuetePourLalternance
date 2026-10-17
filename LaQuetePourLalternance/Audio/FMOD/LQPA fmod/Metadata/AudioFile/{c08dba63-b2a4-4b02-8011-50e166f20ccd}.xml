@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.03.00">
-	<object class="AudioFile" id="{40d9de7c-2bf5-4a62-aae0-d541404652ce}">
+	<object class="AudioFile" id="{c08dba63-b2a4-4b02-8011-50e166f20ccd}">
 		<property name="assetPath">
 			<value>LQPA Mix.wav</value>
 		</property>
@@ -17,7 +17,7 @@
 			<value>114.5</value>
 		</property>
 		<relationship name="masterAssetFolder">
-			<destination>{a3daef16-265e-447d-9299-1e456249bbab}</destination>
+			<destination>{a2868322-3573-4c9f-b70b-973a4187c161}</destination>
 		</relationship>
 	</object>
 </objects>

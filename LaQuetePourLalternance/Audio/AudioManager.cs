@@ -12,7 +12,7 @@ public class AudioManager
     public void Init()
     {
         Check(FMOD.Studio.System.create(out _studio));
-        Check(_studio.initialize(512, FMOD.Studio.INITFLAGS.NORMAL, FMOD.INITFLAGS.NORMAL, IntPtr.Zero));
+        Check(_studio.initialize(512, FMOD.Studio.INITFLAGS.LIVEUPDATE, FMOD.INITFLAGS.NORMAL, IntPtr.Zero));
 
         LoadBank("Master.bank");
         LoadBank("Master.strings.bank");
