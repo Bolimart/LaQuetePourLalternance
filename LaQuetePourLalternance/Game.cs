@@ -229,7 +229,9 @@ public class Game
     
     public void DisplayResult()
     {
-        if (player.Class.CurrentHp > bot.Class.CurrentHp)
+        if(player.Class.CurrentHp == bot.Class.CurrentHp)
+            Console.WriteLine("Bravo ! vous avez gagné... et perdu en mëme temp...");
+        else if (player.Class.CurrentHp > bot.Class.CurrentHp)
             Console.WriteLine("Bravo ! Vous avez gagné !"); 
         else
             Console.WriteLine("Boouuuh vous avez perdu !"); 
