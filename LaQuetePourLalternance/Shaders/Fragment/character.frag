@@ -5,9 +5,10 @@
 
 in vec2 uvCoord;
 
+uniform vec3 color;
 uniform sampler2D texture0;
 
 void main()
 {
-    FragColor = texture(texture0, uvCoord);
+    FragColor = vec4(color.xyz, texture(texture0, uvCoord).a);
 }

@@ -1,4 +1,5 @@
-﻿using LaQuetePourLalternance.Graphics2dApi;
+﻿using System.Security.Cryptography.X509Certificates;
+using LaQuetePourLalternance.Graphics2dApi;
 using LaQuetePourLalternance.Graphics2dApi.BasicObjects;
 using Window = LaQuetePourLalternance.Graphics2dApi.Window;
 
@@ -20,11 +21,12 @@ internal class Program
         
         Texture[] t = new[] { new Texture("Julien/hit1.png") };
 
-        var Attacked = new StringObject( "Hello world !", new(-200, 0, 0), new(1f, 1f, 1), 10.0f);
-        var c = new CharacterObject( 'c', new(-200, 0, 0), new(1f, 1f, 1), 0.0f);
+        Action<string> a = s => Console.WriteLine(s);
         
-        GameEnvironement.Window.AddGameObject(Attacked);
-        GameEnvironement.Window.AddGameObject(c);
+        var Nom = new StringObject("Quel est ton nom ?", new(-200, 30, 0), new(1f, 1f, 1), 45.0f);
+        var input = new InputObject(a, new(-200, 0, 0), new(1f, 1f, 1), 0.0f);
+        
+        GameEnvironement.Window.AddGameObjects(new []{Nom, input});
         
         GameEnvironement.Window.Run();
     }

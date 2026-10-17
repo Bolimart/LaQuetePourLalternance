@@ -4,6 +4,7 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using Half = System.Half;
 
 namespace LaQuetePourLalternance.Graphics2dApi;
 
@@ -28,6 +29,7 @@ public class Window(int width, int height, string title) : GameWindow(GameWindow
     private int VIRT_W = width;   // largeur logique
     private int VIRT_H = height;   // hauteur logique
     private float VIRT_RATIO = (float)width / height;
+    int _fbo, _rbo;
     
     #endregion
     #region - Methods override
@@ -43,6 +45,8 @@ public class Window(int width, int height, string title) : GameWindow(GameWindow
         // Configure OpenGL
         GL.Enable(EnableCap.Blend); // mix the sourced frag (already on the buffer) with the new one (allow transparency)
         GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
         
         // Load Objects
         _vertexBufferObject = GL.GenBuffer();
@@ -68,9 +72,6 @@ public class Window(int width, int height, string title) : GameWindow(GameWindow
     protected override void OnRenderFrame(FrameEventArgs args)
     {
         base.OnRenderFrame(args);
-        GL.Clear(ClearBufferMask.ColorBufferBit);
-        
-        GL.BindVertexArray(_vertexArrayObject);
         
         foreach (var gameObject in Scene)
         {
@@ -87,7 +88,6 @@ public class Window(int width, int height, string title) : GameWindow(GameWindow
             }
         }
         
-        // Swap the old frame with the newly rendered frame.
         SwapBuffers();
     }
 
