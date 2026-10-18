@@ -4,12 +4,14 @@ internal class Program
 {
     public static void Main(string[] args)
     {
+        //AUDIO: appel de l'event music depuis la bank fmod
         Helper.Audio.Init();
         Helper.Audio.StartEvent("event:/Music/mx_fight");
 
         Game game = new();
         game.StartGame();
-        
+
+        //AUDIO: stop l'event music
         Helper.Audio.StopEvent("event:/Music/mx_fight");
         Helper.Audio.Shutdown();
     }
@@ -19,6 +21,8 @@ internal class Program
 static class Helper 
 {
     public static Random Rand = new ();
+
+    //Instanciation de l'objet audio
     public static readonly AudioManager Audio = new();
     
     public static string Asking(string question, string?[] answers = null)

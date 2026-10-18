@@ -16,9 +16,7 @@ public class AudioManager
 
         LoadBank("Master.bank");
         LoadBank("Master.strings.bank");
-        // LoadBank("TonAutreBank.bank");
-
-        // Le jeu se bloque souvent sur Console.ReadLine() : on met à jour FMOD en tâche de fond
+        
         _running = true;
         _updateThread = new Thread(() =>
         {
@@ -39,7 +37,7 @@ public class AudioManager
 
     public void StartEvent(string eventPath)
     {
-        if (_instances.ContainsKey(eventPath)) return; // déjà lancé
+        if (_instances.ContainsKey(eventPath)) return;
 
         Check(_studio.getEvent(eventPath, out FMOD.Studio.EventDescription desc));
         Check(desc.createInstance(out FMOD.Studio.EventInstance instance));
@@ -54,7 +52,7 @@ public class AudioManager
         instance.stop(fadeOut
             ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT
             : FMOD.Studio.STOP_MODE.IMMEDIATE);
-        instance.release(); // libère l'instance une fois arrêtée
+        instance.release(); 
         _instances.Remove(eventPath);
     }
 
