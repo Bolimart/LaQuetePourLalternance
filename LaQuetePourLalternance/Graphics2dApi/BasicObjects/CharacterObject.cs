@@ -62,12 +62,12 @@ public class StringObject : GameObject
     private float _timeToNextChar = 0f;
     private float _timeBetweenChar = 0.15f;
 
-    public StringObject(string text, Vector3 position, Vector3 scale, float rotation, float timeBetweenChar = 0.15f)
+    public StringObject(string text, Vector3 position, Vector3? scale = null, float rotation = 0f, float timeBetweenChar = 0.15f)
     {
         _timeBetweenChar = timeBetweenChar;
         Position = position;
         Rotation = MathHelper.DegreesToRadians(rotation);
-        Scale = scale;
+        Scale = scale ?? new(1, 1, 1);
         Text = text;
     }
 

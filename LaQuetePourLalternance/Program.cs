@@ -32,19 +32,6 @@ internal class Program
     }
 }
 
-static class GameEnvironement
-{
-    public static Random Rand = new ();
-    public static Window Window { get; private set; }
-    public static Game Game { get; private set; }
-
-    public static void Init(int width, int height, string title)
-    {
-        Window = new Window(width, height, title);
-        Game = new Game();
-    }
-}
-
 
 static class Helper 
 {

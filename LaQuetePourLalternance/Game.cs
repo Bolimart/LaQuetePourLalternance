@@ -1,19 +1,18 @@
-using System.ComponentModel;
-using System.ComponentModel.Design;
-using System.Formats.Asn1;
-using System.Reflection.Emit;
-using System.Security.Cryptography;
+using LaQuetePourLalternance.Graphics2dApi;
+using LaQuetePourLalternance.Graphics2dApi.BasicObjects;
 
 namespace LaQuetePourLalternance;
 
-public class Game
+public class Game : GameObject, ISceneInitializer
 {
     #region - Fields & Properties
 
-    Player player;
-    Ia bot;
-
+    private Player player;
+    private Ia bot;
+    private Window _window;
     
+    // text
+    private StringObject _text;
 
     #endregion
     #region - Methods
@@ -48,7 +47,6 @@ public class Game
 
     public void playerTurn()
     {
-        Console.WriteLine("[ TOUR DU JOUEUR ]");
         display();
         player.Class.StartTurn();
         player.Attack();
@@ -57,7 +55,6 @@ public class Game
     
     public void botTurn()
     {
-        Console.WriteLine("[ TOUR DE L'IA ]");
         display();
         bot.Class.StartTurn();
         bot.Attack();
@@ -74,9 +71,9 @@ public class Game
     public void displayResult()
     {
         if (player.Class.CurrentHp > bot.Class.CurrentHp)
-            Console.WriteLine("Bravo ! Vous avez gagné !"); 
+            _text.Text = "Bravo ! Vous avez gagné !"; 
         else
-            Console.WriteLine("Boouuuh vous avez perdu !"); 
+            _text.Text = "Boouuuh vous avez perdu !"; 
     }
 
     public bool endGame()
@@ -84,4 +81,21 @@ public class Game
         return player.Class.CurrentHp <= 0 || bot.Class.CurrentHp <= 0;
     }
     #endregion
+
+    public void LoadScene()
+    {
+        _window = GameEnvironement.Window;
+
+        _text = new("", new(-200, -80, 0), timeBetweenChar: 0.1f);
+        
+        // Init Player 
+        
+        // Init Ennemy
+        
+    }
+
+    public void UnloadScene()
+    {
+        throw new NotImplementedException();
+    }
 }

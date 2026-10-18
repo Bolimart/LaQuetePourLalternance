@@ -1,4 +1,6 @@
-﻿namespace LaQuetePourLalternance;
+﻿using LaQuetePourLalternance.Graphics2dApi;
+
+namespace LaQuetePourLalternance;
 
 using System;
 public class Ia
