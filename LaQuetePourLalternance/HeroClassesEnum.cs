@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using LaQuetePourLalternance.Graphics2dApi;
+using OpenTK.Mathematics;
 
 namespace LaQuetePourLalternance;
 
@@ -7,9 +9,9 @@ public enum HeroClassesEnum
     Healer, Tank, Damager, Custom
 }
 
-public abstract class Hero
+public abstract class Hero : Square
 {
-    protected Hero(Ia? ia = null)
+    protected Hero(Ia? ia = null) : base(new SquareData(new Vector3(0,0,0), new(1,1,1), 0, null, new Shader("shader.vert", "shader.frag")))
     {
         IA = ia;
     }
@@ -33,9 +35,19 @@ public abstract class Hero
     public string attackDesc = "";
     public string deffendDesc = "";
     public string specialDesc = "";
+
+    public List<Texture> idleTextures = new List<Texture>();
+    public Texture hitTexture;
+    public List<Texture> attackTextures = new List<Texture>();
+    public List<Texture> specialTextures = new List<Texture>();
+    public Texture deathTexture;
+    public Texture defendTexture;
+
+    public bool isPlayingAnimation;
     
     public virtual void StartTurn()
     {
+        PlayAnimation(idleTextures, 1f);
         IsSpecialActive = false;
         IsDefending = false;
     }
@@ -47,7 +59,8 @@ public abstract class Hero
         {
             if (isSpecial)
             {
-                dmgTaken = 1;
+                ChangeTexture(hitTexture, true);
+                dmgTaken = 1; 
             }
             else
             {
@@ -56,6 +69,7 @@ public abstract class Hero
         }
         else
         {
+            ChangeTexture(hitTexture, true);
             dmgTaken = damage;
         }
 
@@ -92,6 +106,24 @@ public abstract class Hero
     {
         Adversary ??= adv;
     }
+
+    public void PlayAnimation(List<Texture> anim, float cdBetweenFrames)
+    {
+        while (isPlayingAnimation)
+        {
+            foreach (var sprite in anim)
+            {
+                ChangeTexture(sprite);
+                // wait cdBetweenFrames
+            }
+        }
+    }
+    
+    public void ChangeTexture(Texture texture, bool isShaking = false)
+    {
+        // faire le tremblement
+        Data.Texture = texture;
+    }
     
 }
 
@@ -107,6 +139,13 @@ public class Healer : Hero
         attackDesc = "Bitch slap.";
         deffendDesc = "Il prend sa pause matcha, ne le dérangez pas";
         specialDesc = "Miku miku beam (nom très à côté de la plaque).";
+
+        idleTextures = new List<Texture> { new Texture("Nathan/idle1.png"), new Texture("Nathan/idle2.png"), new Texture("Nathan/idle3.png") };
+        hitTexture = new Texture("Nathan/hit1.png");
+        attackTextures = new List<Texture> { new Texture("Nathan/attack1.png"), new Texture("Nathan/attack2.png")};
+        specialTextures = new List<Texture> { new Texture("Nathan/special.png")};
+        deathTexture = new Texture("Nathan/death.png");
+        defendTexture = new Texture("Nathan/defend.png");
     }
 
     public override void Special()
@@ -131,6 +170,13 @@ public class Tank : Hero
         attackDesc = "*Donne un coup avec son gourdin* TIEN";
         deffendDesc = "*Se bave dessus en se protegeant avec ses bras* gnehhhhh";
         specialDesc = "*S'acharne en donnant un coup le blessant légèrement* YAAAAAAAAAHHHHH";
+        
+        idleTextures = new List<Texture> { new Texture("Younes/idle1.png"), new Texture("Younes/idle2.png")};
+        hitTexture = new Texture("Younes/hit1.png");
+        attackTextures = new List<Texture> { new Texture("Younes/attack1.png"), new Texture("Younes/attack2.png")};
+        specialTextures = new List<Texture> { new Texture("Younes/special1.png"), new Texture("Younes/special2.png")};
+        deathTexture = new Texture("Younes/death.png");
+        defendTexture = new Texture("Younes/defend.png");
     }
     public override void Special()
     {
@@ -154,6 +200,14 @@ public class Damager : Hero
         attackDesc = "Donne un coup d'épée, c'est plutôt OK.";
         deffendDesc = "Il se défend, euh, c'est pas mal.";
         specialDesc = "Réfléchie l'attaque ennemie mais prend quand même les dégâts.";
+        
+        
+        idleTextures = new List<Texture> { new Texture("Vincent/idle1.png"), new Texture("Vincent/idle2.png")};
+        hitTexture = new Texture("Vincent/hit1.png");
+        attackTextures = new List<Texture> { new Texture("Vincent/attack1.png"), new Texture("Vincent/attack2.png")};
+        specialTextures = new List<Texture> { new Texture("Vincent/special1.png"), new Texture("Vincent/special2.png")};
+        deathTexture = new Texture("Vincent/death.png");
+        defendTexture = new Texture("Vincent/defend1.png");
     }
     
     public override void Special()
@@ -186,6 +240,14 @@ public class Custom : Hero
         attackDesc = "Il attaque là ou sa fait mal, dans le porte monnaie. Son attaque retombe à 0.";
         deffendDesc = "Il se défend, il protège surtout son contrat.";
         specialDesc = "Il se tue à la tache pour obtenir son salaire. Il gagne un point d'attaque et est vulnérable pour un tour.";
+        
+        
+        idleTextures = new List<Texture> { new Texture("Julien/idle1.png"), new Texture("Julien/idle2.png")};
+        hitTexture = new Texture("Julien/hit1.png");
+        attackTextures = new List<Texture> { new Texture("Julien/attack1.png"), new Texture("Julien/attack2.png")};
+        specialTextures = new List<Texture> { new Texture("Julien/special1.png")};
+        deathTexture = new Texture("Julien/dead1.png");
+        defendTexture = new Texture("Julien/defend1.png");
     }
     
     public override void Special()
