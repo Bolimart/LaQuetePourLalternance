@@ -180,8 +180,12 @@ public class Damager : Hero
     public override void TakeDamage(int damage, bool isSpecial)
     {
         base.TakeDamage(damage, isSpecial);
-         Console.WriteLine($"{Name} renvoie les dégâts. Mais ce fait quand même bléssé.");
-        if (IsSpecialActive) { DoDamage(damage); }
+
+        if (IsSpecialActive)
+        {
+            Console.WriteLine($"{Name} renvoie les dégâts. Mais ce fait quand même bléssé.");
+            DoDamage(damage);
+        }
     }
 }
 
