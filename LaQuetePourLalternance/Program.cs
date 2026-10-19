@@ -42,7 +42,7 @@ static class Helper
 
             else{
                 foreach (string a in answers){
-                    if (a == answer) {
+                    if (a.ToLower() == answer.ToLower()) {
                         valid = true;
                         break; 
                     }
@@ -51,5 +51,4 @@ static class Helper
         }
         return answer;
     }
-    
 }
