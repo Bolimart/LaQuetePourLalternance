@@ -36,25 +36,56 @@ public class Game
             
             while (!EndGame()) // Tant que le Joueur ou l'Ia n'est pas mort(e) 
             {
+
+                Console.Clear();
+                if (player.Class.CurrentHp == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                }
+                else if((float)player.Class.CurrentHp / player.Class.MaxHp < 0.7f)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                
+                DisplayUi();
+                
                 actionJoueur = PlayerTurn(); // Affiche demande le choix d'action au Joueur/Ia, affiche l'UI, puis reinitialise les flags du tour précédent.
                 actionBot = BotTurn();
                 
+                Console.Clear();
                 Console.WriteLine("-----------------------------------------------------");
                 if (actionJoueur.order <= actionBot.order) // Permet de faire en sorte que les deux actions ce passe en "meme temps", afin d'éviter certains bug.
                 {
                     actionJoueur.action();
                     Console.WriteLine();
                     actionBot.action();
+
                 }
                 else
                 {
                     actionBot.action();
                     Console.WriteLine();
                     actionJoueur.action();
+
                 }
                 Console.WriteLine("-----------------------------------------------------");
+                    Console.ReadLine();
+                
                 
             }
+            
+            Console.Clear();
+            
+            DisplayUi();
+            
+            Console.ReadLine();
+            Console.Clear();
+            
+            Console.ForegroundColor = ConsoleColor.White;
 
             DisplayResult(); // Affiche qui a gagner.
 
@@ -62,6 +93,8 @@ public class Game
 
             if (restartAnswer == "n") // Si le joueur ne veux pas refaire une partie alors sortir de la boucle
                 break;
+            
+            Console.Clear();
         }
     }
 
@@ -72,7 +105,6 @@ public class Game
     public HeroAction PlayerTurn()
     {
         Console.WriteLine("[ TOUR DU JOUEUR ]");
-        DisplayUi();
         player.Class.StartTurn();
         return player.Attack();
         //Console.ReadLine();
@@ -85,10 +117,8 @@ public class Game
     public HeroAction BotTurn()
     {
         Console.WriteLine("[ TOUR DE L'IA ]");
-        DisplayUi();
         bot.Class.StartTurn();
         return bot.Attack();
-        //Console.ReadLine();
     }
     
     /// <summary>
@@ -104,12 +134,39 @@ public class Game
     /// </summary>
     public void DisplayResult()
     {
+        string message;
         if(player.Class.CurrentHp == bot.Class.CurrentHp)
-            Console.WriteLine("Bravo ! Vous avez gagné... et perdu en même temps...");
+            message = "Bravo ! Vous avez gagné... et perdu en même temps...";
         else if (player.Class.CurrentHp > bot.Class.CurrentHp)
-            Console.WriteLine("Bravo ! Vous avez gagné !"); 
+            message = "Bravo ! Vous avez gagné !"; 
         else
-            Console.WriteLine("Boouuuh vous avez perdu !"); 
+            message = "Boouuuh vous avez perdu !";
+        if (player.Class.CurrentHp > bot.Class.CurrentHp)
+        {
+            List<ConsoleColor> BackGroundColor = new List<ConsoleColor>()
+                { ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White };
+            List<ConsoleColor> FrontGroundColor = new List<ConsoleColor>()
+                { ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.White, ConsoleColor.Yellow};
+            for (int i = 0; i < BackGroundColor.Count; i++)
+            {
+                Console.Clear();
+                Console.BackgroundColor = BackGroundColor[i];
+                Console.ForegroundColor = FrontGroundColor[i];
+                Console.WriteLine(message);
+                Thread.Sleep((int)300);
+            
+            }
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.Clear();
+        }
+        else
+        {
+            Console.WriteLine(message);
+        }
+        
+        
+
     }
 
     /// <summary>
