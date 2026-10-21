@@ -248,7 +248,6 @@ public class Game
     public HeroAction PlayerTurn()
     {
         Console.WriteLine("[ TOUR DU JOUEUR ]");
-        Display();
         player.Class.StartTurn();
         return player.Attack();
         //Console.ReadLine();
@@ -261,7 +260,6 @@ public class Game
     public HeroAction BotTurn()
     {
         Console.WriteLine("[ TOUR DE L'IA ]");
-        Display();
         bot.Class.StartTurn();
         return bot.Attack();
         //Console.ReadLine();
@@ -273,7 +271,6 @@ public class Game
         return ai.Attack();
     }
     
-    public void Display()
     
     /// <summary>
     /// Big one liner d'affichage UI

@@ -47,6 +47,14 @@ public abstract class Hero
         IsSpecialActive = false;
         IsDefending = false;
     }
+
+    public void Reset()
+    {
+        CurrentHp = MaxHp;
+        IsDefending = false;
+        IsSpecialActive = false;
+        Damage = StartDamage;
+    }
     
     /// <summary>
     /// Methode pour prendre des dégats, virtual pour pouvoir rajouter des fonctionnalité dans d'autre classes
@@ -99,12 +107,13 @@ public abstract class Hero
         IsDefending = true;
     }
     
-    public virtual void SetAdversary(Hero adv) { Adversary = adv; }
     /// <summary>
     /// Change l'adversaire 
     /// </summary>
     /// <param name="adv"> l'enemie</param>
-    public void SetAdversary(Hero adv) { Adversary ??= adv; }
+    public virtual void SetAdversary(Hero adv) { Adversary = adv; }
+
+
 }
 
 /// <summary>

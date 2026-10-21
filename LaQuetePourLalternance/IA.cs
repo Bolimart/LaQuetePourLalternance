@@ -10,12 +10,11 @@ public class Ia
     /// <summary>
     /// Selectionne l'ia de façons aléatoire
     /// </summary>
-    public Ia()
+    /// 
     public Ia(HeroClassesEnum? classe = null,int difficulty = 1 ,bool debug = false)
     {
         var rand = Helper.Rand;
         var heroClass = classe == null? (HeroClassesEnum)(rand.Next() % 3) : classe.Value;
-        var heroClass = (HeroClassesEnum)(rand.Next() % 3); 
         _class = InitiateClass(heroClass);
         Difficulty = difficulty;
         Debug = debug;
@@ -98,13 +97,7 @@ public class Ia
         return new HeroAction(action, order);
     }
 
-    public void Reset()
-    {
-        Class.CurrentHp = MaxHealth;
-        Class.IsDefending = false;
-        Class.IsSpecialActive = false;
-        Class.Damage = Class.StartDamage;
-    }
+    public void Reset() => Reset();
 
     private HeroAction HealersAI()
     {
