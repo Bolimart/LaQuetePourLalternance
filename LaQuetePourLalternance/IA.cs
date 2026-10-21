@@ -1,12 +1,21 @@
 ﻿namespace LaQuetePourLalternance;
 
 using System;
+
+/// <summary>
+/// Classe s'occupant du fonctionnement de l'IA
+/// </summary>
 public class Ia
 {
+    /// <summary>
+    /// Selectionne l'ia de façons aléatoire
+    /// </summary>
+    public Ia()
     public Ia(HeroClassesEnum? classe = null,int difficulty = 1 ,bool debug = false)
     {
         var rand = Helper.Rand;
         var heroClass = classe == null? (HeroClassesEnum)(rand.Next() % 3) : classe.Value;
+        var heroClass = (HeroClassesEnum)(rand.Next() % 3); 
         _class = InitiateClass(heroClass);
         Difficulty = difficulty;
         Debug = debug;
@@ -26,6 +35,11 @@ public class Ia
 
     public void SetAdversary(Hero adv) => _class.SetAdversary(adv);
 
+    
+    /// <summary>
+    /// Fait choisir l'action que l'IA va faire aléatoirement
+    /// </summary>
+    /// <returns>l'action faite et son ordre</returns>
     public HeroAction Attack()
     {
         if (Difficulty == 1)
@@ -66,7 +80,7 @@ public class Ia
         {
             //Console.WriteLine($"{Class.Name} décide de se défendre face au danger !");
             action = _class.Defend;
-            order = 4;
+            order = _class.DefenseOrder;
         }else if (rdmNumber == 1)
         {
             //Console.WriteLine($"{Class.Name} utilise son abilité spéciale !");
@@ -78,7 +92,7 @@ public class Ia
             action = () => { 
                 _class.DoDamage(_class.Damage);
             };
-            order = 5;
+            order = _class.AttackOrder;
         }
 
         return new HeroAction(action, order);

@@ -2,60 +2,78 @@
 
 namespace LaQuetePourLalternance;
 
+// Permet de savoir facillement de qu'elle classe est un Hero, car c'est pas possible sans variable permettant de le savoir.
 public enum HeroClassesEnum
 {
     Healer, Tank, Damager, Custom
 }
 
-public abstract class Hero
+/// <summary>
+/// Classe abstraite permettant de crée d'autre classe de Hero, un Hero est une Classe Jouable
+/// </summary>
+public abstract class Hero 
 {
-    protected Hero(Ia? ia = null)
+    protected Hero(Ia? ia = null) // Constructeur avec un paramètre IA optionel
     {
         IA = ia;
     }
     
-    public int SpecialOrder { get; protected set; }
-    public HeroClassesEnum Classe;
+    public int SpecialOrder { get; protected set; } // Permet de davoir lors d'un tour, quand est ce que l'attaque spéciale est sensé être fait 
+    public readonly int AttackOrder = 5;
+    public readonly int DefenseOrder = 4;
+    public HeroClassesEnum Classe; // Permet de savoir la classe d'une Hero
 
-    public Ia? IA;
-    public Hero? Adversary;
+    public Ia? IA; // Permet de savoir si le Hero appartient a une IA et de reférencer l'IA 
+    public Hero Adversary; 
     
     public int CurrentHp;
     public int MaxHp;
     public int StartDamage;
     public int Damage;
 
-    public bool IsDefending;
-    public bool IsSpecialActive;
+    protected bool IsDefending; // Permet de savoir si 
+    protected bool IsSpecialActive;
 
     public string Name = "";
-    public string attackDesc = "";
-    public string deffendDesc = "";
-    public string specialDesc = "";
+    public string AttackDesc = "";
+    public string DeffendDesc = "";
+    public string SpecialDesc = "";
     
-    public virtual void StartTurn()
+    /// <summary>
+    /// Reinitialise les variables qui doivent être reinitialiser chaque tour
+    /// </summary>
+    public void StartTurn()
     {
         IsSpecialActive = false;
         IsDefending = false;
     }
     
+    /// <summary>
+    /// Methode pour prendre des dégats, virtual pour pouvoir rajouter des fonctionnalité dans d'autre classes
+    /// </summary>
+    /// <param name="damage">Le nombre de dégats pris</param>
+    /// <param name="isSpecial">Si l'attaque viens du spécial du Tank</param>
     public virtual void TakeDamage(int damage, bool isSpecial)
     {
         int dmgTaken = 0;
-        if (IsDefending)
+        if (IsDefending) // Si il est entrain de ce défendre, ne prend pas de dégat, ou 1 si c'est l'attque spéciale du Tank
         {
             if (isSpecial) { dmgTaken = 1; }
             else { dmgTaken =  0; }
         }
         else { dmgTaken = damage; }
 
-        if (IA != null) IA.DamageTaken = dmgTaken;
+        if (IA != null) IA.DamageTaken = dmgTaken; // Permet a l'IA de savoir combien de dégat elle a subi le tour précédent
 
-        CurrentHp -= dmgTaken;
-        if (CurrentHp < 0) { CurrentHp = 0; }
+        CurrentHp -= dmgTaken; // Retire au HP le nombre de dégats pris
+        if (CurrentHp < 0) { CurrentHp = 0; } // met les HPs a 0 si on est en dessous.
     }
 
-    public virtual void DoDamage(int damage)
+    /// <summary>
+    /// Appèle la fonction TakeDamage de l'adversaire, virtual pour pouvoir rajouter des fonctionnalité dans d'autre classes
+    /// </summary>
+    /// <param name="damage"> nombre de dégat fait</param>
+    public virtual void DoDamage(int damage) 
     {
         if (IA == null || !IA.Debug)
         {
@@ -82,23 +100,30 @@ public abstract class Hero
     }
     
     public virtual void SetAdversary(Hero adv) { Adversary = adv; }
+    /// <summary>
+    /// Change l'adversaire 
+    /// </summary>
+    /// <param name="adv"> l'enemie</param>
+    public void SetAdversary(Hero adv) { Adversary ??= adv; }
 }
 
+/// <summary>
+/// Healer, son spécial lui permet de heal 2 HP
+/// </summary>
 public class Healer : Hero
 {
     // Variables de base pour le Healer
     public Healer(Ia? ia = null) : base(ia)
     {
         Classe = HeroClassesEnum.Healer;
-        StartDamage = 1;
         Damage = 1;
         MaxHp = 4;
         CurrentHp = MaxHp;
         Name = (IA != null ? "Dark " : "") + "Yithash";
         SpecialOrder = 6;
-        attackDesc = "Bitch slap.";
-        deffendDesc = "Il prend sa pause matcha, ne le dérangez pas";
-        specialDesc = "Miku miku beam (nom très à côté de la plaque).";
+        AttackDesc = "Bitch slap.";
+        DeffendDesc = "Il prend sa pause matcha, ne le dérangez pas";
+        SpecialDesc = "Miku miku beam (nom très à côté de la plaque).";
     }
     
     public override void Special()
@@ -114,21 +139,23 @@ public class Healer : Hero
     }
 }
 
+/// <summary>
+/// Tank, son spécial est une attaque qui cause 2PV, et traverse la defense
+/// </summary>
 public class Tank : Hero
 {
     // Variables de base pour le Tank
     public Tank(Ia? ia = null) : base(ia)
     {
         Classe = HeroClassesEnum.Tank;
-        StartDamage = 1;
         Damage = 1;
         MaxHp = 5;
         SpecialOrder = 2;
         CurrentHp = MaxHp;
         Name =  (IA != null ? "Dark " : "")  +"Azdelux";
-        attackDesc = "*Donne un coup avec son gourdin* TIEN";
-        deffendDesc = "*Se bave dessus en se protegeant avec ses bras* gnehhhhh";
-        specialDesc = "*S'acharne en donnant un coup le blessant légèrement* YAAAAAAAAAHHHHH";
+        AttackDesc = "*Donne un coup avec son gourdin* TIEN";
+        DeffendDesc = "*Se bave dessus en se protegeant avec ses bras* gnehhhhh";
+        SpecialDesc = "*S'acharne en donnant un coup le blessant légèrement* YAAAAAAAAAHHHHH";
     }
     public override void Special()
     {
@@ -140,21 +167,23 @@ public class Tank : Hero
     }
 }
 
+/// <summary>
+/// Damager, son spécial fait qu'il retourne les dégat pris
+/// </summary>
 public class Damager : Hero
 {
     // Variables de base pour le Damager
     public Damager(Ia? ia = null) : base(ia)
     {
         Classe = HeroClassesEnum.Damager;
-        StartDamage = 2;
         Damage = 2;
         MaxHp = 3;
         SpecialOrder = 1;
         CurrentHp = MaxHp;
         Name =  (IA != null ? "Dark " : "") + "Folet";
-        attackDesc = "Donne un coup d'épée, c'est plutôt OK.";
-        deffendDesc = "Il se défend, euh, c'est pas mal.";
-        specialDesc = "Réfléchie l'attaque ennemie mais prend quand même les dégâts.";
+        AttackDesc = "Donne un coup d'épée, c'est plutôt OK.";
+        DeffendDesc = "Il se défend, euh, c'est pas mal.";
+        SpecialDesc = "Réfléchie l'attaque ennemie mais prend quand même les dégâts.";
     }
     
     public override void Special()
@@ -185,19 +214,19 @@ public class Damager : Hero
         if (IA == null || !IA.Debug) 
             Console.WriteLine($"{Name} renvoie les dégâts. Mais ce fait quand même bléssé.");
         if (IsSpecialActive) { DoDamage(damage); }
-    }
+        base.TakeDamage(damage, isSpecial);
 
-    public override void SetAdversary(Hero adv)
-    {
-        base.SetAdversary(adv);
-        if (adv.Classe == HeroClassesEnum.Tank ||adv.Classe == HeroClassesEnum.Custom) //Amelioration faite pour le fair play, mais c'est pas dans les consignes
+        if (IsSpecialActive)
         {
-            MaxHp = 4;
-            CurrentHp = 4;
+            Console.WriteLine($"{Name} renvoie les dégâts. Mais ce fait quand même bléssé.");
+            DoDamage(damage);
         }
     }
 }
 
+/// <summary>
+/// Classe Custom, commence avec 0 dégat, permet d'augmenter son nombre de dégat avec son spécial, mais est plus vulnérable. Retour a 0 si il ce fait toucher.
+/// </summary>
 public class Custom : Hero
 {
     // Variables de base pour la classe custom
@@ -205,14 +234,13 @@ public class Custom : Hero
     {
         Classe = HeroClassesEnum.Custom;
         Damage = 0;
-        StartDamage = 0;
         MaxHp = 5;
         SpecialOrder = 0;
         CurrentHp = MaxHp;
         Name = (IA != null ? "Dark " : "") + "Bolimart";
-        attackDesc = "Il attaque là ou sa fait mal, dans le porte monnaie. Son attaque retombe à 0.";
-        deffendDesc = "Il se défend, il protège surtout son contrat.";
-        specialDesc = "Il se tue à la tache pour obtenir son salaire. Il gagne un point d'attaque et est vulnérable pour un tour.";
+        AttackDesc = "Il attaque là ou sa fait mal, dans le porte monnaie. Son attaque retombe à 0.";
+        DeffendDesc = "Il se défend, il protège surtout son contrat.";
+        SpecialDesc = "Il se tue à la tache pour obtenir son salaire. Il gagne un point d'attaque et est vulnérable pour un tour.";
     }
     
     public override void Special()
@@ -242,6 +270,11 @@ public class Custom : Hero
     }
 }
 
+/// <summary>
+/// Struct stockant une action d'un Hero ainsi que dans quel ordre elle ce passe
+/// </summary>
+/// <param name="_action"></param>
+/// <param name="_order"></param>
 public struct HeroAction(Action _action, int _order)
 {
     public Action action = _action;

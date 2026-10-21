@@ -1,7 +1,13 @@
 ﻿namespace LaQuetePourLalternance;
 
+/// <summary>
+/// Classe s'occupant du fonctionnement du Joueur
+/// </summary>
 public class Player
 {
+    /// <summary>
+    /// Demande au joueur qu'elle classe il veux jouer
+    /// </summary>
     public Player()
     {
         var s = """
@@ -27,19 +33,19 @@ public class Player
 
     public Hero Class => _class;
 
-    public int DamageTaken; // Pour l'IA Ameliorer
-    private int CurrentHealth => _class.CurrentHp; // Pour l'IA Ameliorer
-    private int MaxHealth => _class.MaxHp; // pour l'IA Ameliorer
-
     public void SetAdversary(Hero adv) => _class.SetAdversary(adv);
     
+    /// <summary>
+    /// Fait choisir l'action faite au joueur
+    /// </summary>
+    /// <returns>Action faite et son ordre</returns>
     public HeroAction Attack()
     {
         int choice = 0;
         var s = $"""
-                 1 - Attack : {_class.attackDesc}
-                 2 - Defend : {_class.deffendDesc}
-                 3 - Special : {_class.specialDesc}
+                 1 - Attack : {_class.AttackDesc}
+                 2 - Defend : {_class.DeffendDesc}
+                 3 - Special : {_class.SpecialDesc}
                  """;
         choice = int.Parse(Helper.Asking(s, new []{"1", "2", "3"}));
 
